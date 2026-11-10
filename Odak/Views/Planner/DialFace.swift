@@ -12,11 +12,11 @@ struct DialFace: View {
             for lane in TaskLane.allCases {
                 context.stroke(
                     Path(ellipseIn: circle(radius: metrics.laneMid(lane))),
-                    with: .color(PlannerPalette.band(lane)),
+                    with: .color(OdakPalette.band(lane)),
                     lineWidth: metrics.laneWidth
                 )
             }
-            context.fill(Path(ellipseIn: circle(radius: metrics.faceRadius)), with: .color(PlannerPalette.face))
+            context.fill(Path(ellipseIn: circle(radius: metrics.faceRadius)), with: .color(OdakPalette.face))
 
             for step in 0..<(DialGeometry.minutesPerTurn / 5) {
                 let minutes = Double(step * 5)
@@ -26,7 +26,7 @@ struct DialFace: View {
                 var tick = Path()
                 tick.move(to: DialGeometry.point(forMinutes: minutes, radius: metrics.faceRadius - 5, center: center))
                 tick.addLine(to: DialGeometry.point(forMinutes: minutes, radius: metrics.faceRadius - 5 - length, center: center))
-                context.stroke(tick, with: .color(PlannerPalette.ink.opacity(isHour ? 0.7 : 0.28)), lineWidth: isHour ? 1.5 : 1)
+                context.stroke(tick, with: .color(OdakPalette.ink.opacity(isHour ? 0.7 : 0.28)), lineWidth: isHour ? 1.5 : 1)
             }
 
             let firstHour = segment.startMinutes / 60
@@ -36,10 +36,10 @@ struct DialFace: View {
                 var line = Path()
                 line.move(to: DialGeometry.point(forMinutes: minutes, radius: metrics.faceRadius, center: center))
                 line.addLine(to: DialGeometry.point(forMinutes: minutes, radius: metrics.radius, center: center))
-                context.stroke(line, with: .color(PlannerPalette.ink.opacity(0.13)), lineWidth: 1)
+                context.stroke(line, with: .color(OdakPalette.ink.opacity(0.13)), lineWidth: 1)
 
                 context.draw(
-                    Text(verbatim: Self.label(forHour: hour)).font(numberFont).foregroundStyle(PlannerPalette.ink),
+                    Text(verbatim: Self.label(forHour: hour)).font(numberFont).foregroundStyle(OdakPalette.ink),
                     at: DialGeometry.point(forMinutes: minutes, radius: metrics.numberRadius, center: center)
                 )
             }
@@ -50,7 +50,7 @@ struct DialFace: View {
                 context.drawArcText(
                     lane.localizedName.uppercased(with: .current),
                     font: .system(size: max(metrics.laneWidth * 0.2, 8.5), weight: .semibold),
-                    color: PlannerPalette.ink.opacity(0.4),
+                    color: OdakPalette.ink.opacity(0.4),
                     center: center,
                     radius: metrics.laneMid(lane),
                     midAngle: DialGeometry.angle(forMinutes: labelMinutes),

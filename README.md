@@ -71,7 +71,7 @@ When a session starts, Odak runs `sudo -n /Library/PrivilegedHelperTools/app.oda
 
 Nothing outside the markers is changed. The section is removed when the session ends or is stopped, when you quit Odak, and on the next launch if Odak crashed while blocking.
 
-Browsers get a second layer. Chrome and others often resolve names themselves ("secure DNS") or keep a connection open, and then never look at `/etc/hosts`. So during a session Odak also checks the tabs of Safari, Chrome, Dia, Arc, Brave, Edge and Vivaldi every two seconds and sends any tab on a blocked site, or one of its subdomains, to a local "blocked" page. macOS asks once per browser whether Odak may control it (System Settings > Privacy & Security > Automation). Odak reads tab addresses only to compare them with your list; nothing is stored or sent anywhere.
+Browsers get a second layer. Chrome and others often resolve names themselves ("secure DNS") or keep a connection open, and then never look at `/etc/hosts`. So during a session Odak also checks the tabs of Safari, Chrome, Dia, Arc, Brave, Edge and Vivaldi every two seconds and sends any tab on a blocked site, or one of its subdomains, to a local "blocked" page. That page shows what you said you were working on and today's plan with what is still open, so the detour ends with a look at the work it was avoiding. macOS asks once per browser whether Odak may control it (System Settings > Privacy & Security > Automation). Odak reads tab addresses only to compare them with your list; nothing is stored or sent anywhere.
 
 App blocking needs no privileges.
 

@@ -7,32 +7,44 @@ struct BlockingSection: View {
     @AppStorage(Preferences.Key.blockedApps) private var appsData = Data()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Toggle("Block distractions", isOn: $isEnabled)
+        Card {
+            VStack(alignment: .leading, spacing: 8) {
+                Toggle(isOn: $isEnabled) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Block distractions")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(OdakPalette.ink)
+                        if isEnabled {
+                            Text(summary)
+                                .font(.system(size: 11))
+                                .foregroundStyle(OdakPalette.ink.opacity(0.55))
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .toggleStyle(.switch)
+                .controlSize(.small)
                 .onChange(of: isEnabled) {
                     model.blockingPreferenceChanged()
                 }
 
-            if isEnabled {
-                Text(summary)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                if siteCount > 0 && !model.blocking.isHelperInstalled {
+                if isEnabled && siteCount > 0 && !model.blocking.isHelperInstalled {
                     HStack {
                         Text("Website blocking needs a one-time setup.")
-                            .font(.caption)
+                            .font(.system(size: 11))
+                            .foregroundStyle(OdakPalette.ink.opacity(0.7))
                         Spacer()
                         Button("Install Helper…", action: model.installHelper)
                             .controlSize(.small)
                     }
                 }
-            }
 
-            if let error = model.blocking.lastError {
-                Label(error, systemImage: "exclamationmark.triangle.fill")
-                    .font(.caption)
-                    .foregroundStyle(.red)
+                if let error = model.blocking.lastError {
+                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                        .font(.system(size: 11))
+                        .foregroundStyle(OdakPalette.warning)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
         }
     }

@@ -7,29 +7,53 @@ struct TimerSection: View {
     @AppStorage(Preferences.Key.longBreakMinutes) private var longBreakMinutes = Preferences.Default.longBreakMinutes
 
     var body: some View {
+        @Bindable var model = model
         let timer = model.timer
-        VStack(spacing: 10) {
-            HStack {
-                Label(timer.phase.title, systemImage: timer.phase.symbolName)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 6) {
+                Image(systemName: timer.phase.symbolName)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.5))
+                SectionLabel(timer.phase.title)
                 Spacer()
                 if timer.status == .paused {
-                    Text("Paused")
+                    SectionLabel("Paused")
                 }
             }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
 
-            Text(verbatim: Countdown.string(for: displayedSeconds))
-                .font(.system(size: 48, weight: .light))
-                .monospacedDigit()
-                .frame(maxWidth: .infinity)
+            VStack(alignment: .leading, spacing: 8) {
+                Text(verbatim: Countdown.string(for: displayedSeconds))
+                    .font(.system(size: 60, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(OdakPalette.ink.opacity(timer.status == .paused ? 0.45 : 1))
+                    .contentTransition(.numericText(countsDown: true))
+                    .animation(.snappy(duration: 0.3), value: Int(displayedSeconds))
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            HStack {
+                progressBar
+            }
+
+            TextField("What are you working on?", text: $model.intention)
+                .textFieldStyle(.plain)
+                .font(.system(size: 16, weight: .medium, design: .serif))
+                .foregroundStyle(OdakPalette.ink)
+                .padding(.bottom, 7)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(OdakPalette.ink.opacity(0.15))
+                        .frame(height: 1)
+                }
+
+            if timer.status == .idle && timer.phase == .focus {
+                DurationPicker()
+            }
+
+            HStack(spacing: 8) {
                 Button(action: model.primaryAction) {
                     Text(primaryTitle)
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(PrimaryButtonStyle())
                 .keyboardShortcut(.defaultAction)
 
                 if timer.isActive || timer.phase.isBreak {
@@ -40,16 +64,35 @@ struct TimerSection: View {
                             Text("Skip Break")
                         }
                     }
+                    .buttonStyle(QuietButtonStyle())
                 }
             }
-            .controlSize(.large)
 
             if timer.isFocusing && !model.isFocusScreenVisible {
-                Button("Show Focus Screen", action: model.showFocusScreen)
-                    .buttonStyle(.link)
-                    .font(.caption)
+                Button(action: model.showFocusScreen) {
+                    Label("Show Focus Screen", systemImage: "arrow.up.left.and.arrow.down.right")
+                }
+                .buttonStyle(FooterButtonStyle())
             }
         }
+    }
+
+    /// How much of the session is behind you. Empty while nothing is running.
+    private var progressBar: some View {
+        let timer = model.timer
+        let elapsed = timer.isActive && timer.duration > 0 ? 1 - timer.remaining / timer.duration : 0
+        return GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(OdakPalette.bands[1])
+                Capsule()
+                    .fill(timer.phase.isBreak ? OdakPalette.ink.opacity(0.5) : OdakPalette.accent)
+                    .frame(width: max(geometry.size.width * min(max(elapsed, 0), 1), timer.isActive ? 5 : 0))
+                    .animation(.linear(duration: 1), value: elapsed)
+            }
+        }
+        .frame(height: 5)
+        .accessibilityHidden(true)
     }
 
     private var displayedSeconds: TimeInterval {

@@ -3,9 +3,9 @@ import SwiftUI
 extension TaskLane {
     var tint: Color {
         switch self {
-        case .focus: PlannerPalette.dynamic(light: 0x179C56, dark: 0x2FBF70)
-        case .meeting: PlannerPalette.dynamic(light: 0x4343CF, dark: 0x7272EE)
-        case .personal: PlannerPalette.dynamic(light: 0xDE6628, dark: 0xEE8346)
+        case .focus: OdakPalette.accent
+        case .meeting: OdakPalette.dynamic(light: 0x4343CF, dark: 0x7272EE)
+        case .personal: OdakPalette.dynamic(light: 0xDE6628, dark: 0xEE8346)
         }
     }
 

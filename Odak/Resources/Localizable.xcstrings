@@ -423,6 +423,16 @@
         }
       }
     },
+    "Day streak" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük seri"
+          }
+        }
+      }
+    },
     "Delete" : {
       "localizations" : {
         "tr" : {
@@ -549,6 +559,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odak seansı tamamlandı"
+          }
+        }
+      }
+    },
+    "Focus sessions only. For time per project, open the week in review from the planner." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca odak seansları. Proje başına süre için planlayıcıdan haftalık özeti aç."
           }
         }
       }
@@ -1063,6 +1083,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kaydet"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar"
           }
         }
       }

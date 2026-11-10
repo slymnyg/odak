@@ -5,29 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Odak</title>
 <style>
-  :root { --paper: #F3EFE8; --ink: #1B1E26; --soft: rgba(27, 30, 38, .58); --ring: #DDD6C8; --tint: #179C56; }
+  :root {
+    --paper: #F3EFE8; --face: #FFFEFB; --ink: #1B1E26; --soft: rgba(27, 30, 38, .58); --faint: rgba(27, 30, 38, .12);
+    --ring: #DDD6C8; --focus: #179C56; --meeting: #4343CF; --personal: #DE6628;
+  }
   @media (prefers-color-scheme: dark) {
-    :root { --paper: #15171C; --ink: #F1EEE8; --soft: rgba(241, 238, 232, .6); --ring: #282C34; --tint: #2FBF70; }
+    :root {
+      --paper: #15171C; --face: #22262D; --ink: #F1EEE8; --soft: rgba(241, 238, 232, .6); --faint: rgba(241, 238, 232, .12);
+      --ring: #282C34; --focus: #2FBF70; --meeting: #7272EE; --personal: #EE8346;
+    }
   }
-  html, body { height: 100%; margin: 0; }
+  html { min-height: 100%; }
   body {
-    display: grid; place-items: center; background: var(--paper); color: var(--ink);
-    font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--paper); color: var(--ink);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   }
-  main { text-align: center; padding: 24px; max-width: 520px; }
-  svg { width: 132px; height: 132px; }
+  main { box-sizing: border-box; width: 100%; max-width: 560px; padding: 48px 24px; }
+  svg { width: 92px; height: 92px; display: block; }
   .track { fill: none; stroke: var(--ring); stroke-width: 9; }
   .arc {
-    fill: none; stroke: var(--tint); stroke-width: 9; stroke-linecap: round;
+    fill: none; stroke: var(--focus); stroke-width: 9; stroke-linecap: round;
     stroke-dasharray: 239 320; transform: rotate(-90deg); transform-origin: 50% 50%;
     animation: draw 1.1s cubic-bezier(.2, .8, .2, 1) both;
   }
   .hub { fill: var(--ink); }
   @keyframes draw { from { stroke-dasharray: 0 320; } }
-  @media (prefers-reduced-motion: reduce) { .arc { animation: none; } }
-  h1 { font: 700 38px/1.15 "New York", "Iowan Old Style", Georgia, serif; margin: 28px 0 10px; }
+  h1 { font: 700 40px/1.12 "New York", "Iowan Old Style", Georgia, serif; margin: 26px 0 8px; }
   p { margin: 0; color: var(--soft); }
   b { color: var(--ink); font-weight: 600; }
+  .label {
+    font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft);
+    margin: 34px 0 8px;
+  }
+  .intention { font: 600 24px/1.25 "New York", "Iowan Old Style", Georgia, serif; color: var(--ink); overflow-wrap: anywhere; }
+  ol { list-style: none; margin: 0; padding: 0; }
+  li {
+    display: grid; grid-template-columns: 10px 4.2em 1fr auto; align-items: center; gap: 12px;
+    padding: 11px 0; border-top: 1px solid var(--faint);
+  }
+  li:first-child { border-top: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 3px; }
+  .time { font-variant-numeric: tabular-nums; color: var(--soft); font-size: 14px; }
+  .title { font-weight: 600; overflow-wrap: anywhere; }
+  .done .title { font-weight: 400; color: var(--soft); text-decoration: line-through; }
+  .done .dot { opacity: .35; }
+  .badge {
+    font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    color: #fff; background: var(--focus); border-radius: 99px; padding: 2px 9px;
+  }
+  .left { margin-top: 14px; font-size: 14px; }
+  [hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .arc { animation: none; } }
 </style>
 </head>
 <body>
@@ -39,21 +67,80 @@
   </svg>
   <h1 id="title">Back to your focus</h1>
   <p id="body"></p>
+
+  <section id="intention-block" hidden>
+    <div class="label" id="intention-label">You sat down for</div>
+    <div class="intention" id="intention"></div>
+  </section>
+
+  <section id="plan-block" hidden>
+    <div class="label" id="plan-label">Today's plan</div>
+    <ol id="plan"></ol>
+    <p class="left" id="left"></p>
+  </section>
 </main>
 <script>
-  // The domain arrives in the fragment; it is only ever written as text.
+(function () {
+  // Filled in by Odak when it writes this page; null in the bundled copy.
+  var data = /*ODAK_DATA*/null;
+  // Everything below is inserted with textContent, never as markup.
   var domain = decodeURIComponent(location.hash.slice(1)).replace(/[^a-z0-9.-]/gi, "");
   var turkish = (navigator.language || "").toLowerCase().indexOf("tr") === 0;
-  var body = document.getElementById("body");
-  var name = document.createElement("b");
-  name.textContent = domain;
-  if (turkish) {
-    document.documentElement.lang = "tr";
-    document.getElementById("title").textContent = "Odağına dön";
-    body.append(name, domain ? ", odak seansın bitene kadar engelli." : "Bu site odak seansın bitene kadar engelli.");
+  var text = turkish ? {
+    title: "Odağına dön", blocked: ", odak seansın bitene kadar engelli.", generic: "Bu site odak seansın bitene kadar engelli.",
+    intention: "Bunun için oturmuştun", plan: "Bugünün planı", now: "Şimdi",
+    left: function (n) { return n === 0 ? "Bugünün planı tamam." : "Bugün seni bekleyen " + n + " iş var."; }
+  } : {
+    title: "Back to your focus", blocked: " is blocked until your focus session ends.", generic: "This site is blocked until your focus session ends.",
+    intention: "You sat down for", plan: "Today's plan", now: "Now",
+    left: function (n) { return n === 0 ? "Today's plan is done." : n === 1 ? "1 thing is still waiting for you today." : n + " things are still waiting for you today."; }
+  };
+  function el(id) { return document.getElementById(id); }
+
+  document.documentElement.lang = turkish ? "tr" : "en";
+  el("title").textContent = text.title;
+  if (domain) {
+    var site = document.createElement("b");
+    site.textContent = domain;
+    el("body").append(site, text.blocked);
   } else {
-    body.append(name, domain ? " is blocked until your focus session ends." : "This site is blocked until your focus session ends.");
+    el("body").textContent = text.generic;
   }
+
+  if (data && data.intention) {
+    el("intention-label").textContent = text.intention;
+    el("intention").textContent = data.intention;
+    el("intention-block").hidden = false;
+  }
+
+  if (data && data.tasks && data.tasks.length) {
+    el("plan-label").textContent = text.plan;
+    var lanes = { focus: "var(--focus)", meeting: "var(--meeting)", personal: "var(--personal)" };
+    data.tasks.forEach(function (task) {
+      var row = document.createElement("li");
+      row.className = task.state;
+      var dot = document.createElement("span");
+      dot.className = "dot";
+      dot.style.background = lanes[task.lane] || "var(--soft)";
+      var time = document.createElement("span");
+      time.className = "time";
+      time.textContent = task.time;
+      var title = document.createElement("span");
+      title.className = "title";
+      title.textContent = task.title;
+      row.append(dot, time, title);
+      if (task.state === "now") {
+        var badge = document.createElement("span");
+        badge.className = "badge";
+        badge.textContent = text.now;
+        row.append(badge);
+      }
+      el("plan").append(row);
+    });
+    el("left").textContent = text.left(data.tasks.filter(function (task) { return task.state !== "done"; }).length);
+    el("plan-block").hidden = false;
+  }
+})();
 </script>
 </body>
 </html>

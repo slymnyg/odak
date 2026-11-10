@@ -7,6 +7,11 @@ final class BlockingController {
     private(set) var isHelperInstalled = HelperInstaller.isInstalled
     private(set) var lastError: String? = nil
 
+    /// Supplies the session's intention and today's plan for the page blocked tabs land on.
+    @ObservationIgnored var blockedPageContext: (() -> BlockedPage.Context)? {
+        didSet { browserBlocker.pageContext = blockedPageContext }
+    }
+
     private let siteBlocker = SiteBlocker()
     private let appBlocker: AppBlocker
     private let browserBlocker = BrowserBlocker()

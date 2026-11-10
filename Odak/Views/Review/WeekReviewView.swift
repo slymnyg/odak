@@ -43,7 +43,7 @@ struct WeekReviewView: View {
                 .padding(.top, 22)
 
             Divider()
-                .overlay(PlannerPalette.ink.opacity(0.08))
+                .overlay(OdakPalette.ink.opacity(0.08))
                 .padding(.top, 18)
 
             if rows.isEmpty {
@@ -71,12 +71,12 @@ struct WeekReviewView: View {
 
             Text("Time is estimated from file changes in \(Preferences.activityFolder.lastPathComponent). Pauses of up to \(ActivityMath.maxGapSlots * ActivityMath.slotMinutes) minutes count as work.")
                 .font(.caption)
-                .foregroundStyle(PlannerPalette.ink.opacity(0.45))
+                .foregroundStyle(OdakPalette.ink.opacity(0.45))
                 .padding(.top, 10)
         }
         .padding(30)
         .frame(width: 760, height: 640)
-        .background(PlannerPalette.paper)
+        .background(OdakPalette.paper)
         .task(id: days.first) {
             isLoadingCommits = true
             let interval = DateInterval(start: days.first ?? anchor, duration: 7 * 86_400)
@@ -92,11 +92,11 @@ struct WeekReviewView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Your week")
                     .font(.system(size: 32, weight: .bold, design: .serif))
-                    .foregroundStyle(PlannerPalette.ink)
+                    .foregroundStyle(OdakPalette.ink)
                 if let first = days.first, let last = days.last {
                     Text(verbatim: (first..<last).formatted(.interval.day().month(.wide)))
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(PlannerPalette.ink.opacity(0.55))
+                        .foregroundStyle(OdakPalette.ink.opacity(0.55))
                 }
             }
             Spacer()
@@ -131,13 +131,13 @@ struct WeekReviewView: View {
             Text(verbatim: value)
                 .font(.system(size: isHero ? 40 : 24, weight: .bold, design: .rounded))
                 .monospacedDigit()
-                .foregroundStyle(PlannerPalette.ink)
+                .foregroundStyle(OdakPalette.ink)
                 .contentTransition(.numericText())
             Text(label)
                 .font(.system(size: 11, weight: .semibold))
                 .textCase(.uppercase)
                 .kerning(0.6)
-                .foregroundStyle(PlannerPalette.ink.opacity(0.5))
+                .foregroundStyle(OdakPalette.ink.opacity(0.5))
         }
     }
 
@@ -145,13 +145,13 @@ struct WeekReviewView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(isLoadingCommits ? "Reading your repositories…" : "Nothing recorded this week")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundStyle(PlannerPalette.ink.opacity(0.75))
+                .foregroundStyle(OdakPalette.ink.opacity(0.75))
             if !Preferences.trackActivity {
                 Text("Project tracking is off. Turn it on in Settings → General.")
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.5))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.5))
             } else {
                 Text("Odak notes which project you work on whenever files change in \(Preferences.activityFolder.lastPathComponent).")
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.5))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.5))
             }
         }
         .padding(.top, 24)
@@ -192,18 +192,18 @@ private struct ProjectRow: View {
             Button(action: onToggle) {
                 HStack(spacing: 12) {
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(minutes > 0 ? color : PlannerPalette.ink.opacity(0.15))
+                        .fill(minutes > 0 ? color : OdakPalette.ink.opacity(0.15))
                         .frame(width: 12, height: 12)
 
                     VStack(alignment: .leading, spacing: 1) {
                         Text(verbatim: (name as NSString).lastPathComponent)
                             .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(PlannerPalette.ink)
+                            .foregroundStyle(OdakPalette.ink)
                         let parent = (name as NSString).deletingLastPathComponent
                         if !parent.isEmpty {
                             Text(verbatim: parent)
                                 .font(.caption)
-                                .foregroundStyle(PlannerPalette.ink.opacity(0.45))
+                                .foregroundStyle(OdakPalette.ink.opacity(0.45))
                         }
                     }
 
@@ -212,17 +212,17 @@ private struct ProjectRow: View {
                     if !commits.isEmpty {
                         Text("\(commits.count) commits")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(PlannerPalette.ink.opacity(0.55))
+                            .foregroundStyle(OdakPalette.ink.opacity(0.55))
                         Image(systemName: "chevron.right")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(PlannerPalette.ink.opacity(0.35))
+                            .foregroundStyle(OdakPalette.ink.opacity(0.35))
                             .rotationEffect(.degrees(isExpanded ? 90 : 0))
                     }
 
                     Text(verbatim: ActivityMath.durationText(minutes: minutes))
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                        .foregroundStyle(PlannerPalette.ink.opacity(minutes > 0 ? 1 : 0.35))
+                        .foregroundStyle(OdakPalette.ink.opacity(minutes > 0 ? 1 : 0.35))
                         .frame(width: 84, alignment: .trailing)
                 }
                 .padding(.vertical, 9)
@@ -238,11 +238,11 @@ private struct ProjectRow: View {
                             Text(commit.date, format: .dateTime.weekday(.abbreviated).hour().minute())
                                 .font(.caption)
                                 .monospacedDigit()
-                                .foregroundStyle(PlannerPalette.ink.opacity(0.45))
+                                .foregroundStyle(OdakPalette.ink.opacity(0.45))
                                 .frame(width: 78, alignment: .leading)
                             Text(verbatim: commit.subject)
                                 .font(.system(size: 13))
-                                .foregroundStyle(PlannerPalette.ink.opacity(0.8))
+                                .foregroundStyle(OdakPalette.ink.opacity(0.8))
                                 .lineLimit(2)
                         }
                     }

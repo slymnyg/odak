@@ -74,7 +74,7 @@ struct GeneralSettingsView: View {
                 if let loginError {
                     Text(loginError)
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(OdakPalette.warning)
                 }
             }
         }

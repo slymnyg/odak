@@ -42,7 +42,7 @@ struct PlannerView: View {
             .animation(.spring(duration: 0.6, bounce: 0.12), value: segment)
             .animation(.snappy(duration: 0.3), value: day)
         }
-        .background(PlannerPalette.paper)
+        .background(OdakPalette.paper)
         .ignoresSafeArea()
         .frame(minWidth: 940, minHeight: 600)
         .sheet(item: $draft) { draft in
@@ -98,9 +98,9 @@ struct PlannerView: View {
         } label: {
             Image(systemName: "chart.bar.fill")
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(PlannerPalette.ink.opacity(0.7))
+                .foregroundStyle(OdakPalette.ink.opacity(0.7))
                 .frame(width: 40, height: 40)
-                .background(PlannerPalette.bands[0], in: Circle())
+                .background(OdakPalette.bands[0], in: Circle())
                 .contentShape(Circle())
         }
         .buttonStyle(.plain)
@@ -113,7 +113,7 @@ struct PlannerView: View {
         Button(action: addTask) {
             Image(systemName: "plus")
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(PlannerPalette.onTask)
+                .foregroundStyle(OdakPalette.onTask)
                 .frame(width: 52, height: 52)
                 .contentShape(Circle())
         }

@@ -41,25 +41,25 @@ private struct HandCanvas: View, Animatable {
     var body: some View {
         Canvas { context, _ in
             let center = metrics.center
-            context.fill(Path(ellipseIn: dot(at: center, radius: 5)), with: .color(PlannerPalette.ink))
-            context.fill(Path(ellipseIn: dot(at: center, radius: 1.8)), with: .color(PlannerPalette.face))
+            context.fill(Path(ellipseIn: dot(at: center, radius: 5)), with: .color(OdakPalette.ink))
+            context.fill(Path(ellipseIn: dot(at: center, radius: 1.8)), with: .color(OdakPalette.face))
             guard let label else { return }
 
             var hand = Path()
             hand.move(to: DialGeometry.point(forMinutes: minutes, radius: 5, center: center))
             hand.addLine(to: DialGeometry.point(forMinutes: minutes, radius: metrics.handLength, center: center))
-            context.stroke(hand, with: .color(PlannerPalette.ink), style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
+            context.stroke(hand, with: .color(OdakPalette.ink), style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
 
             let text = context.resolve(
                 Text(label, format: .dateTime.hour().minute())
                     .font(.system(size: 11, weight: .bold, design: .rounded))
                     .monospacedDigit()
-                    .foregroundStyle(PlannerPalette.paper)
+                    .foregroundStyle(OdakPalette.paper)
             )
             let size = text.measure(in: CGSize(width: 120, height: 40))
             let anchor = DialGeometry.point(forMinutes: minutes, radius: metrics.handLength + size.width / 2 + 4, center: center)
             let pill = CGRect(x: anchor.x - size.width / 2 - 6, y: anchor.y - size.height / 2 - 3, width: size.width + 12, height: size.height + 6)
-            context.fill(Path(roundedRect: pill, cornerRadius: pill.height / 2), with: .color(PlannerPalette.ink))
+            context.fill(Path(roundedRect: pill, cornerRadius: pill.height / 2), with: .color(OdakPalette.ink))
             context.draw(text, at: anchor, anchor: .center)
         }
     }

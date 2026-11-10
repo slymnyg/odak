@@ -25,7 +25,7 @@ struct DailyBars: View {
                     Text(verbatim: total > 0 ? ActivityMath.durationText(minutes: total) : " ")
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                        .foregroundStyle(PlannerPalette.ink.opacity(0.75))
+                        .foregroundStyle(OdakPalette.ink.opacity(0.75))
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
@@ -34,7 +34,7 @@ struct DailyBars: View {
                     Text(day, format: .dateTime.weekday(.abbreviated))
                         .font(.system(size: 11, weight: isToday ? .bold : .medium))
                         .textCase(.uppercase)
-                        .foregroundStyle(PlannerPalette.ink.opacity(isToday ? 0.9 : 0.5))
+                        .foregroundStyle(OdakPalette.ink.opacity(isToday ? 0.9 : 0.5))
                 }
                 .frame(maxWidth: .infinity)
                 .accessibilityElement(children: .ignore)
@@ -65,7 +65,7 @@ struct DailyBars: View {
         .frame(height: Self.plotHeight)
         .overlay(alignment: .bottom) {
             Rectangle()
-                .fill(PlannerPalette.ink.opacity(0.18))
+                .fill(OdakPalette.ink.opacity(0.18))
                 .frame(height: 1)
                 .offset(y: 1)
         }

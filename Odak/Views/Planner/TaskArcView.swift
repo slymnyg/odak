@@ -29,7 +29,7 @@ struct TaskArcView: View {
 
         return ZStack {
             if isSelected {
-                core.stroke(PlannerPalette.ink, style: StrokeStyle(lineWidth: corner * 2 + 5, lineJoin: .round))
+                core.stroke(OdakPalette.ink, style: StrokeStyle(lineWidth: corner * 2 + 5, lineJoin: .round))
             }
             Group {
                 core.fill(task.lane.tint)
@@ -45,7 +45,7 @@ struct TaskArcView: View {
                 context.drawArcText(
                     task.title,
                     font: .system(size: max(metrics.laneWidth * 0.27, 10.5), weight: .semibold),
-                    color: PlannerPalette.onTask,
+                    color: OdakPalette.onTask,
                     center: metrics.center,
                     radius: radius,
                     midAngle: DialGeometry.angle(forMinutes: (minutes.lowerBound + minutes.upperBound) / 2),

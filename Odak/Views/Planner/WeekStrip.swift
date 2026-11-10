@@ -25,7 +25,7 @@ struct WeekStrip: View {
             }
         }
         .padding(6)
-        .background(PlannerPalette.bands[0], in: Capsule())
+        .background(OdakPalette.bands[0], in: Capsule())
     }
 
     private var weekDays: [Date] {
@@ -51,12 +51,12 @@ private struct DayRing: View {
         ZStack {
             if isSelected {
                 Circle()
-                    .fill(PlannerPalette.face)
+                    .fill(OdakPalette.face)
                     .matchedGeometryEffect(id: "selection", in: selection)
             }
             Circle()
                 .inset(by: Self.lineWidth / 2 + 1)
-                .stroke(PlannerPalette.bands[2], lineWidth: Self.lineWidth)
+                .stroke(OdakPalette.bands[2], lineWidth: Self.lineWidth)
 
             ForEach(tasks) { task in
                 let start = Double(DialGeometry.dayMinutes(for: task.start, on: date)) / Double(DialGeometry.minutesPerDay)
@@ -72,10 +72,10 @@ private struct DayRing: View {
                 Text(date, format: .dateTime.weekday(.abbreviated))
                     .font(.system(size: 8, weight: .semibold))
                     .textCase(.uppercase)
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.55))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.55))
                 Text(date, format: .dateTime.day())
                     .font(.system(size: 14, weight: isSelected || isToday ? .bold : .medium, design: .rounded))
-                    .foregroundStyle(isToday ? Color.accentColor : PlannerPalette.ink)
+                    .foregroundStyle(isToday ? Color.accentColor : OdakPalette.ink)
             }
         }
         .frame(width: Self.diameter, height: Self.diameter)

@@ -78,4 +78,37 @@ final class DomainParserTests: XCTestCase {
         XCTAssertTrue(page.hasSuffix("blocked.html#youtube.com"))
         XCTAssertNil(DomainParser.blockedDomain(forURL: page, in: ["youtube.com"]))
     }
+
+    func testBlockedPageContextSortsAndMarksTasks() {
+        let now = Date(timeIntervalSince1970: 1_794_300_000)
+        func task(_ title: String, _ from: TimeInterval, _ to: TimeInterval, _ lane: TaskLane) -> PlannedTask {
+            PlannedTask(title: title, note: "", start: now.addingTimeInterval(from), end: now.addingTimeInterval(to), lane: lane)
+        }
+        let context = BlockedPage.context(
+            intention: "  Ship the dial \n",
+            tasks: [task("Later", 3600, 7200, .meeting), task("Earlier", -7200, -3600, .personal), task("Current", -600, 1800, .focus)],
+            now: now
+        )
+        XCTAssertEqual(context.intention, "Ship the dial")
+        XCTAssertEqual(context.tasks.map(\.title), ["Earlier", "Current", "Later"])
+        XCTAssertEqual(context.tasks.map(\.state), [.done, .now, .next])
+        XCTAssertEqual(context.tasks.map(\.lane), ["personal", "focus", "meeting"])
+    }
+
+    func testBlockedPageHTMLCannotBreakOutOfItsScript() {
+        let context = BlockedPage.Context(
+            intention: "</script><img src=x onerror=alert(1)>",
+            tasks: [.init(title: "a & b", time: "09:00", lane: "focus", state: .next)]
+        )
+        let html = BlockedPage.html(template: "<script>var data = \(BlockedPage.placeholder);</script>", context: context)
+        XCTAssertFalse(html.contains("</script><img"))
+        XCTAssertFalse(html.contains(BlockedPage.placeholder))
+        XCTAssertTrue(html.contains("\\u003c\\/script\\u003e") || html.contains("\\u003c/script\\u003e"))
+        XCTAssertTrue(html.hasSuffix(";</script>"))
+    }
+
+    func testBundledBlockedPageHasThePlaceholder() throws {
+        let url = try XCTUnwrap(Bundle.main.url(forResource: "blocked", withExtension: "html"))
+        XCTAssertTrue(try String(contentsOf: url, encoding: .utf8).contains(BlockedPage.placeholder))
+    }
 }

@@ -29,9 +29,9 @@ struct TaskPanel: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Nothing planned for now")
                         .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(PlannerPalette.ink.opacity(0.75))
+                        .foregroundStyle(OdakPalette.ink.opacity(0.75))
                     Text("Drag along a ring to plan a task.")
-                        .foregroundStyle(PlannerPalette.ink.opacity(0.5))
+                        .foregroundStyle(OdakPalette.ink.opacity(0.5))
                 }
             }
 
@@ -41,7 +41,7 @@ struct TaskPanel: View {
                         .font(.system(size: 11, weight: .semibold))
                         .textCase(.uppercase)
                         .kerning(0.8)
-                        .foregroundStyle(PlannerPalette.ink.opacity(0.5))
+                        .foregroundStyle(OdakPalette.ink.opacity(0.5))
                     ForEach(upcoming) { task in
                         UpcomingTaskRow(task: task)
                     }
@@ -68,24 +68,24 @@ private struct CurrentTaskView: View {
                     .font(.system(size: 11, weight: .bold))
                     .textCase(.uppercase)
                     .kerning(0.6)
-                    .foregroundStyle(PlannerPalette.onTask)
+                    .foregroundStyle(OdakPalette.onTask)
                     .padding(.horizontal, 9)
                     .padding(.vertical, 3)
                     .background(task.lane.tint, in: Capsule())
                 Text(verbatim: task.timeRangeText)
                     .font(.system(size: 15, weight: .medium, design: .rounded))
                     .monospacedDigit()
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.6))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.6))
             }
 
             Text(task.title)
                 .font(.system(size: 30, weight: .bold, design: .serif))
-                .foregroundStyle(PlannerPalette.ink)
+                .foregroundStyle(OdakPalette.ink)
                 .lineLimit(2)
 
             if !task.note.isEmpty {
                 Text(task.note)
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.6))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.6))
                     .lineLimit(3)
             }
 
@@ -111,7 +111,7 @@ private struct CurrentTaskView: View {
             if let focusMinutes {
                 Text("Focus for \(focusMinutes) min, until the task ends.")
                     .font(.caption)
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.5))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.5))
             }
         }
     }
@@ -133,12 +133,12 @@ private struct UpcomingTaskRow: View {
                 .frame(width: 4, height: 32)
             VStack(alignment: .leading, spacing: 2) {
                 Text(task.title)
-                    .foregroundStyle(PlannerPalette.ink)
+                    .foregroundStyle(OdakPalette.ink)
                     .lineLimit(1)
                 Text(verbatim: task.timeRangeText)
                     .font(.caption)
                     .monospacedDigit()
-                    .foregroundStyle(PlannerPalette.ink.opacity(0.55))
+                    .foregroundStyle(OdakPalette.ink.opacity(0.55))
             }
         }
     }

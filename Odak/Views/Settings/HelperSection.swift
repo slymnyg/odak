@@ -9,7 +9,7 @@ struct HelperSection: View {
             LabeledContent("Status") {
                 if blocking.isHelperInstalled {
                     Label("Installed", systemImage: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
+                        .foregroundStyle(OdakPalette.accent)
                 } else {
                     Text("Not installed")
                         .foregroundStyle(.secondary)
@@ -23,7 +23,7 @@ struct HelperSection: View {
             if let error = blocking.lastError {
                 Label(error, systemImage: "exclamationmark.triangle.fill")
                     .font(.callout)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(OdakPalette.warning)
             }
 
             HStack {

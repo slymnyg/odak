@@ -27,12 +27,16 @@ final class BrowserBlocker {
     private static let interval: TimeInterval = 2
     private static let notPermitted = -1743
 
+    /// What the blocked page should show besides the site's name. Asked whenever a tab is turned away.
+    var pageContext: (() -> BlockedPage.Context)?
+
     /// Called with a browser's name the first time macOS refuses to let Odak script it.
     var onPermissionDenied: ((String) -> Void)?
 
     private var domains: [String] = []
     private var timer: Timer?
     private var denied = Set<String>()
+    private var writtenPage: String?
 
     func start(domains: [String]) {
         stop()
@@ -51,6 +55,7 @@ final class BrowserBlocker {
         timer = nil
         domains.removeAll()
         denied.removeAll()
+        writtenPage = nil
     }
 
     private func sweep() {
@@ -103,13 +108,40 @@ final class BrowserBlocker {
     }
 
     private func redirect(_ tab: BlockedTab, in browser: Browser) {
-        guard let page = Self.blockedPage(for: tab.domain) else { return }
+        guard let page = currentPage(for: tab.domain) else { return }
         let source = """
         with timeout of 2 seconds
             tell application id "\(browser.bundleIdentifier)" to set URL of tab \(tab.index) of window id \(tab.windowID) to "\(page)"
         end timeout
         """
         _ = run(source, for: browser)
+    }
+
+    /// The page with today's plan written into it, falling back to the bundled copy without one.
+    /// The plan goes into a file under Application Support, not into the URL, so it stays out of
+    /// the browser's history.
+    private func currentPage(for domain: String) -> String? {
+        guard let context = pageContext?(),
+              let template = Bundle.main.url(forResource: "blocked", withExtension: "html"),
+              let source = try? String(contentsOf: template, encoding: .utf8) else {
+            return Self.blockedPage(for: domain)
+        }
+        let file = URL.applicationSupportDirectory
+            .appending(path: "Odak", directoryHint: .isDirectory)
+            .appending(path: "blocked.html", directoryHint: .notDirectory)
+        let html = BlockedPage.html(template: source, context: context)
+        if html != writtenPage {
+            do {
+                try FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
+                try html.write(to: file, atomically: true, encoding: .utf8)
+                writtenPage = html
+            } catch {
+                return Self.blockedPage(for: domain)
+            }
+        }
+        var components = URLComponents(url: file, resolvingAgainstBaseURL: false)
+        components?.fragment = domain
+        return components?.string ?? Self.blockedPage(for: domain)
     }
 
     /// The bundled "blocked" page, with the domain in the fragment so the page can name it.

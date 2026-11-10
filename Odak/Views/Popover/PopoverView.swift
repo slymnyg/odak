@@ -5,49 +5,44 @@ struct PopoverView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            IntentionField(model: model)
-
+        VStack(alignment: .leading, spacing: 16) {
             TimerSection()
 
-            if model.timer.status == .idle && model.timer.phase == .focus {
-                DurationPicker()
-            }
-
-            Divider()
             BlockingSection()
-            Divider()
             TodaySummary()
-            Divider()
+
+            Rectangle()
+                .fill(OdakPalette.ink.opacity(0.08))
+                .frame(height: 1)
+
             footer
         }
-        .padding(14)
-        .frame(width: 300)
+        .padding(18)
+        .frame(width: 320)
+        .background(OdakPalette.paper)
+        .tint(OdakPalette.accent)
+        .animation(.snappy(duration: 0.25), value: model.timer.status)
+        .animation(.snappy(duration: 0.25), value: model.timer.phase)
     }
 
     private var footer: some View {
-        HStack {
-            Button("Plan Your Day…") {
+        HStack(spacing: 0) {
+            Button {
                 model.showPlanner()
+            } label: {
+                Label("Plan Your Day…", systemImage: "circle.lefthalf.filled")
             }
             Spacer()
             SettingsLink {
-                Text("Settings…")
+                Label("Settings…", systemImage: "gearshape")
             }
-            Button("Quit") {
+            Spacer()
+            Button {
                 NSApplication.shared.terminate(nil)
+            } label: {
+                Label("Quit", systemImage: "power")
             }
         }
-        .buttonStyle(.borderless)
-        .controlSize(.small)
-    }
-}
-
-private struct IntentionField: View {
-    @Bindable var model: AppModel
-
-    var body: some View {
-        TextField("What are you working on?", text: $model.intention)
-            .textFieldStyle(.roundedBorder)
+        .buttonStyle(FooterButtonStyle())
     }
 }

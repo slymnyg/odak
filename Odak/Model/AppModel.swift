@@ -26,6 +26,10 @@ final class AppModel {
         let notifier = Notifier()
         self.notifier = notifier
         blocking = BlockingController(notifier: notifier)
+        blocking.blockedPageContext = { [weak self] in
+            guard let self else { return BlockedPage.Context() }
+            return BlockedPage.context(intention: intention, tasks: self.plans.tasks(on: .now), now: .now)
+        }
     }
 
     /// Starts (or restarts, after a settings change) watching the projects folder.
