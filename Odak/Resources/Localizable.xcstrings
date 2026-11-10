@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ is already on the list." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ zaten listede."
+          }
+        }
+      }
+    },
     "%@ is blocked during your focus session." : {
       "localizations" : {
         "tr" : {
@@ -173,6 +183,16 @@
         }
       }
     },
+    "Add" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekle"
+          }
+        }
+      }
+    },
     "Add App…" : {
       "localizations" : {
         "tr" : {
@@ -189,6 +209,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Görev Ekle"
+          }
+        }
+      }
+    },
+    "Add a site" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Site ekle"
           }
         }
       }
@@ -303,12 +333,12 @@
         }
       }
     },
-    "Blocking stays on while a session is paused and turns off during breaks. Changes to the lists apply from the next focus session." : {
+    "Blocking stays on while a session is paused and turns off during breaks. The lists are saved as you change them and apply right away." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seans duraklatıldığında engelleme açık kalır, molalarda kapanır. Listelerdeki değişiklikler bir sonraki odak seansından itibaren geçerli olur."
+            "value" : "Engelleme, seans duraklatıldığında açık kalır ve molalarda kapanır. Listeler değiştirdikçe kaydedilir ve hemen uygulanır."
           }
         }
       }
@@ -349,16 +379,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seç…"
-          }
-        }
-      }
-    },
-    "Clean Up" : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temizle"
           }
         }
       }
@@ -793,6 +813,16 @@
         }
       }
     },
+    "No sites blocked." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Engelli site yok."
+          }
+        }
+      }
+    },
     "Not installed" : {
       "localizations" : {
         "tr" : {
@@ -879,16 +909,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odak, %@ içinde dosyalar değiştikçe hangi projede çalıştığını not eder."
-          }
-        }
-      }
-    },
-    "One site per line. Pasted links are fine; www and mobile versions are included." : {
-      "localizations" : {
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Her satıra bir site. Link yapıştırabilirsin; www ve mobil sürümler de engellenir."
           }
         }
       }
@@ -1087,6 +1107,26 @@
         }
       }
     },
+    "Saved as you go. Pasted links are fine; subdomains, www and mobile versions are included." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaptıkça kaydedilir. Yapıştırılan bağlantılar olur; alt alan adları, www ve mobil sürümler dahildir."
+          }
+        }
+      }
+    },
+    "Saved. Changes apply to the running session right away." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydedildi. Değişiklikler açık seansa hemen uygulanır."
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "tr" : {
@@ -1243,6 +1283,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durdur"
+          }
+        }
+      }
+    },
+    "That doesn't look like a site address." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu bir site adresine benzemiyor."
           }
         }
       }

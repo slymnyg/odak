@@ -3,6 +3,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct BlockedAppsSection: View {
+    @Environment(AppModel.self) private var model
     @AppStorage(Preferences.Key.blockedApps) private var appsData = Data()
 
     private var apps: [BlockedApp] {
@@ -41,6 +42,9 @@ struct BlockedAppsSection: View {
             Text("Apps")
         } footer: {
             Text("Blocked apps are hidden whenever they come to the front during a focus session. They are never quit, so no work is lost.")
+        }
+        .onChange(of: appsData) {
+            model.blockingPreferenceChanged()
         }
     }
 

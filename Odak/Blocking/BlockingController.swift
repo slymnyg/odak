@@ -30,7 +30,16 @@ final class BlockingController {
         appBlocker.start(apps: Preferences.blockedApps, until: deadline)
 
         let domains = DomainParser.parse(Preferences.blockedSites)
-        guard !domains.isEmpty else { return }
+        guard !domains.isEmpty else {
+            // The list was emptied, possibly mid-session: lift what an earlier call put in place.
+            browserBlocker.stop()
+            if isHelperInstalled {
+                Task {
+                    try? await siteBlocker.unblock()
+                }
+            }
+            return
+        }
         browserBlocker.start(domains: domains)
         guard isHelperInstalled else {
             lastError = String(localized: "Install the helper in Settings to block websites.")
