@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-14
+    runs-on: macos-latest
     env:
       # Optional notarization. If any of these secrets is missing, the
       # notarization steps are skipped and the app is ad-hoc signed instead.
