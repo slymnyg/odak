@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Browser tab check during sessions: tabs on a blocked site or its subdomains are sent to a local "blocked" page in Safari, Chrome, Dia, Arc, Brave, Edge and Vivaldi. This covers browsers that skip `/etc/hosts` (secure DNS, open connections). Needs the macOS Automation permission once per browser.
 - Focus on the dial: a running session lights up its stretch of time and dims the rest, the hand turns green and counts the minutes left, and finished sessions stay as thin arcs next to the clock face. The planner's side panel shows the countdown with pause and stop.
 - Half-hour marks on the clock face.
+- Full-screen focus screen redrawn: the countdown sits in a clock-like ring that fills as the session passes, with the intention above and the next planned task below.
 - The blocked page shows the session's intention and today's plan, with finished tasks struck through.
 - Settings and the menu bar panel redrawn in the planner's paper-and-ink style.
 - Week in review: hours per day, time per project and your commits, tracked automatically from file changes in the git repositories under a projects folder (default `~/Development`).
