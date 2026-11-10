@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ free" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ boş"
+          }
+        }
+      }
+    },
     "%@ is already on the list." : {
       "localizations" : {
         "tr" : {
@@ -37,6 +47,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@, %2$@ saatine kadar engelli."
+          }
+        }
+      }
+    },
+    "%@ won't fit today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bugüne sığmıyor"
           }
         }
       }
@@ -117,6 +137,16 @@
         }
       }
     },
+    "%lld min before" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dk önce"
+          }
+        }
+      }
+    },
     "%lld sessions" : {
       "localizations" : {
         "en" : {
@@ -183,6 +213,16 @@
         }
       }
     },
+    "A minute now saves the day from drifting. Your routine is already in place." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi ayıracağın bir dakika günün dağılmasını önler. Molaların yerinde hazır."
+          }
+        }
+      }
+    },
     "Add" : {
       "localizations" : {
         "tr" : {
@@ -209,6 +249,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Görev Ekle"
+          }
+        }
+      }
+    },
+    "Add a Break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mola ekle"
           }
         }
       }
@@ -269,6 +319,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uygulamalar"
+          }
+        }
+      }
+    },
+    "At" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat"
           }
         }
       }
@@ -343,12 +403,32 @@
         }
       }
     },
+    "Break" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mola"
+          }
+        }
+      }
+    },
     "Break is over" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mola bitti"
+          }
+        }
+      }
+    },
+    "Breaks" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Molalar"
           }
         }
       }
@@ -393,6 +473,16 @@
         }
       }
     },
+    "Continue" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam"
+          }
+        }
+      }
+    },
     "Covers the main display with a dark screen showing only the countdown. Press Esc to return to the menu bar." : {
       "localizations" : {
         "tr" : {
@@ -423,12 +513,52 @@
         }
       }
     },
+    "Data" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veriler"
+          }
+        }
+      }
+    },
+    "Data folder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veri klasörü"
+          }
+        }
+      }
+    },
     "Day" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gün"
+          }
+        }
+      }
+    },
+    "Day Routine" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gün düzeni"
+          }
+        }
+      }
+    },
+    "Day Routine…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gün düzeni…"
           }
         }
       }
@@ -459,6 +589,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sil"
+          }
+        }
+      }
+    },
+    "Dinner" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akşam yemeği"
           }
         }
       }
@@ -503,6 +643,16 @@
         }
       }
     },
+    "Each task lands in the first free time of the day, around your breaks. Three good ones are plenty." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her iş, molalarının çevresinde günün ilk boş zamanına yerleşir. Üç iyi iş yeter."
+          }
+        }
+      }
+    },
     "Edit Task" : {
       "localizations" : {
         "tr" : {
@@ -539,6 +689,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Akşam"
+          }
+        }
+      }
+    },
+    "First, your usual day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önce, olağan günün"
           }
         }
       }
@@ -613,6 +773,26 @@
         }
       }
     },
+    "Free · %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boş · %@"
+          }
+        }
+      }
+    },
+    "From yesterday" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dünden"
+          }
+        }
+      }
+    },
     "Full-screen focus screen" : {
       "localizations" : {
         "tr" : {
@@ -633,12 +813,52 @@
         }
       }
     },
+    "Good afternoon" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İyi günler"
+          }
+        }
+      }
+    },
+    "Good evening" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İyi akşamlar"
+          }
+        }
+      }
+    },
+    "Good morning" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günaydın"
+          }
+        }
+      }
+    },
     "Hide (Esc)" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gizle (Esc)"
+          }
+        }
+      }
+    },
+    "I work from" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma saatlerim"
           }
         }
       }
@@ -683,6 +903,46 @@
         }
       }
     },
+    "Invite me to plan the day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günü planlamaya çağır"
+          }
+        }
+      }
+    },
+    "Invite me to plan the day at" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günü planlamaya şu saatte çağır"
+          }
+        }
+      }
+    },
+    "Keep in iCloud Drive" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive'da sakla"
+          }
+        }
+      }
+    },
+    "Keep on This Mac" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Mac'te sakla"
+          }
+        }
+      }
+    },
     "Last 7 Days" : {
       "localizations" : {
         "tr" : {
@@ -723,6 +983,26 @@
         }
       }
     },
+    "Longer" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzat"
+          }
+        }
+      }
+    },
+    "Lunch" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğle yemeği"
+          }
+        }
+      }
+    },
     "Meeting" : {
       "localizations" : {
         "tr" : {
@@ -759,6 +1039,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sabah"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad"
+          }
+        }
+      }
+    },
+    "Never" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir zaman"
           }
         }
       }
@@ -823,6 +1123,16 @@
         }
       }
     },
+    "Not Today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün değil"
+          }
+        }
+      }
+    },
     "Not installed" : {
       "localizations" : {
         "tr" : {
@@ -863,12 +1173,32 @@
         }
       }
     },
+    "Nothing yet." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz bir şey yok."
+          }
+        }
+      }
+    },
     "Odak blocks websites by adding them to /etc/hosts, which works in every browser. The helper is a small script in /Library/PrivilegedHelperTools plus a sudoers rule that lets Odak run only that script without asking for your password each time. Installing asks for your administrator password once." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odak, siteleri /etc/hosts dosyasına ekleyerek engeller; bu yöntem tüm tarayıcılarda çalışır. Yardımcı, /Library/PrivilegedHelperTools içindeki küçük bir betik ve Odak'ın her seferinde şifre sormadan yalnızca bu betiği çalıştırmasına izin veren bir sudoers kuralından oluşur. Kurulum sırasında yönetici şifren bir kez istenir."
+          }
+        }
+      }
+    },
+    "Odak can't write to that folder." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odak bu klasöre yazamıyor."
           }
         }
       }
@@ -909,6 +1239,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odak, %@ içinde dosyalar değiştikçe hangi projede çalıştığını not eder."
+          }
+        }
+      }
+    },
+    "On this Mac" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Mac'te"
           }
         }
       }
@@ -979,6 +1319,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gününü Planla…"
+          }
+        }
+      }
+    },
+    "Plan the Day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günü planla"
+          }
+        }
+      }
+    },
+    "Plan your day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gününü planla"
+          }
+        }
+      }
+    },
+    "Plans, focus history and project time are kept here. Keep the folder in iCloud Drive, or any synced folder, and choose the same one on your other Macs to see them there too. What is already in either place is merged. Settings and block lists stay on each Mac." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planlar, odak geçmişi ve proje süreleri burada tutulur. Klasörü iCloud Drive'da ya da eşitlenen başka bir klasörde saklayıp diğer Mac'lerinde de aynı klasörü seçersen hepsinde görünür. İki tarafta zaten bulunan veriler birleştirilir. Ayarlar ve engel listeleri her Mac'te ayrı kalır."
           }
         }
       }
@@ -1083,9 +1453,35 @@
         }
       }
     },
+    "Remind me of each task" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her işi hatırlat"
+          }
+        }
+      }
+    },
+    "Reminders" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hatırlatmalar"
+          }
+        }
+      }
+    },
     "Remove" : {
-      "comment" : "A button that removes an app from the list of blocked apps.",
-      "isCommentAutoGenerated" : true
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaldır"
+          }
+        }
+      }
     },
     "Resume" : {
       "localizations" : {
@@ -1123,6 +1519,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kaydedildi. Değişiklikler açık seansa hemen uygulanır."
+          }
+        }
+      }
+    },
+    "Set this once. Every morning Odak puts your breaks in place and fits your tasks around them." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunu bir kez ayarla. Odak her sabah molalarını yerine koyar, işlerini onların çevresine yerleştirir."
           }
         }
       }
@@ -1167,12 +1573,32 @@
         }
       }
     },
+    "Shorter" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısalt"
+          }
+        }
+      }
+    },
     "Show Focus Screen" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odak Ekranını Göster"
+          }
+        }
+      }
+    },
+    "Show in Finder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finder'da göster"
           }
         }
       }
@@ -1233,6 +1659,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Molaları otomatik başlat"
+          }
+        }
+      }
+    },
+    "Start the Day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günü başlat"
+          }
+        }
+      }
+    },
+    "Starting now, until %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi başlıyor, %@ saatine kadar."
+          }
+        }
+      }
+    },
+    "Starts at %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ saatinde başlıyor."
           }
         }
       }
@@ -1307,6 +1763,16 @@
         }
       }
     },
+    "The chosen data folder can't be reached, so Odak is saving on this Mac for now." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilen veri klasörüne ulaşılamıyor; Odak şimdilik bu Mac'e kaydediyor."
+          }
+        }
+      }
+    },
     "The helper could not be changed: %@" : {
       "localizations" : {
         "tr" : {
@@ -1323,6 +1789,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yardımcı betik uygulama paketinde bulunamadı."
+          }
+        }
+      }
+    },
+    "The working day is over. Change its hours in Day Routine, or plan tomorrow in the morning." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma günü bitti. Saatlerini Gün düzeni'nden değiştirebilir ya da yarını sabah planlayabilirsin."
           }
         }
       }
@@ -1393,6 +1869,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Proje başına süreyi izle"
+          }
+        }
+      }
+    },
+    "Type a task and press Return" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir iş yaz, Return'e bas"
           }
         }
       }
@@ -1487,12 +1973,52 @@
         }
       }
     },
+    "What matters today, most important first" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün ne önemli, en önemlisi en başta"
+          }
+        }
+      }
+    },
+    "When it starts" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başladığında"
+          }
+        }
+      }
+    },
     "Worked" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çalışılan"
+          }
+        }
+      }
+    },
+    "Working hours" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma saatleri"
+          }
+        }
+      }
+    },
+    "Working hours and breaks are set under Day Routine when you plan the day (⌘D in the planner)." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışma saatleri ve molalar, günü planlarken Gün düzeni'nden ayarlanır (planlayıcıda ⌘D)."
           }
         }
       }
@@ -1523,6 +2049,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Öğleden sonran"
+          }
+        }
+      }
+    },
+    "Your day" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günün"
           }
         }
       }
@@ -1573,6 +2109,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "dk"
+          }
+        }
+      }
+    },
+    "to" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "–"
           }
         }
       }

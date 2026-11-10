@@ -64,16 +64,16 @@ final class ActivityTests: XCTestCase {
 
     @MainActor
     func testStoreRecordsAndReloads() {
-        let url = FileManager.default.temporaryDirectory.appending(path: "odak-activity-\(UUID().uuidString).json")
+        let url = FileManager.default.temporaryDirectory.appending(path: "odak-activity-\(UUID().uuidString)", directoryHint: .isDirectory)
         defer { try? FileManager.default.removeItem(at: url) }
-        let store = ActivityStore(file: JSONFile(url: url))
+        let store = ActivityStore(folder: url, device: "a")
         store.record(["a", "b"], at: date(10, 9, 2), calendar: calendar)
         store.record(["a"], at: date(10, 9, 3), calendar: calendar)
         store.record(["a"], at: date(10, 9, 12), calendar: calendar)
         XCTAssertEqual(store.slots(on: date(10, 0), calendar: calendar), ["a": [108, 110], "b": [108]])
         store.flush()
 
-        let reloaded = ActivityStore(file: JSONFile(url: url))
+        let reloaded = ActivityStore(folder: url, device: "a")
         XCTAssertEqual(reloaded.slots(on: date(10, 0), calendar: calendar), ["a": [108, 110], "b": [108]])
         XCTAssertTrue(reloaded.slots(on: date(11, 0), calendar: calendar).isEmpty)
     }

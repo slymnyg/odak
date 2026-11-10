@@ -12,6 +12,9 @@ struct GeneralSettingsView: View {
 
     @AppStorage(Preferences.Key.trackActivity) private var trackActivity = Preferences.Default.trackActivity
     @AppStorage(Preferences.Key.activityFolder) private var activityFolder = Preferences.Default.activityFolder
+    @AppStorage(Preferences.Key.planDay) private var planDay = Preferences.Default.planDay
+    @AppStorage(Preferences.Key.planDayMinutes) private var planDayMinutes = Preferences.Default.planDayMinutes
+    @AppStorage(Preferences.Key.taskReminderLead) private var reminderLead = Preferences.Default.taskReminderLead
     @Environment(AppModel.self) private var model
 
     @State private var loginStatus = SMAppService.mainApp.status
@@ -41,6 +44,23 @@ struct GeneralSettingsView: View {
                 Toggle("Play sound when a session ends", isOn: $playSound)
             }
 
+            Section("Day") {
+                Toggle("Invite me to plan the day", isOn: $planDay)
+                LabeledContent("At") {
+                    MinutePicker(minutes: $planDayMinutes)
+                        .disabled(!planDay)
+                }
+                LabeledContent("Remind me of each task") {
+                    ReminderLeadPicker(lead: $reminderLead)
+                }
+                Text("Working hours and breaks are set under Day Routine when you plan the day (⌘D in the planner).")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .onChange(of: planDay) { model.refreshReminders() }
+            .onChange(of: planDayMinutes) { model.refreshReminders() }
+            .onChange(of: reminderLead) { model.refreshReminders() }
+
             Section("Projects") {
                 Toggle("Track time per project", isOn: $trackActivity)
                 LabeledContent("Projects folder") {
@@ -58,6 +78,8 @@ struct GeneralSettingsView: View {
             }
             .onChange(of: trackActivity) { model.startActivityTracking() }
             .onChange(of: activityFolder) { model.startActivityTracking() }
+
+            DataFolderSection()
 
             Section("Startup") {
                 Toggle("Launch at login", isOn: launchAtLogin)

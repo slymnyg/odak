@@ -16,6 +16,7 @@ struct PlannerView: View {
     }
 
     var body: some View {
+        @Bindable var model = model
         let tasks = model.plans.tasks(on: day)
         GeometryReader { geometry in
             let metrics = DialMetrics(size: geometry.size, half: segment.clockHalf)
@@ -61,6 +62,15 @@ struct PlannerView: View {
         .sheet(isPresented: $showsReview) {
             WeekReviewView(date: day)
         }
+        .sheet(isPresented: $model.isPlanningDay) {
+            PlanDayView()
+        }
+        .onChange(of: model.isPlanningDay) { _, isPlanning in
+            if isPlanning {
+                day = Calendar.current.startOfDay(for: .now)
+                segment = DaySegment(containing: .now)
+            }
+        }
         .onChange(of: day) {
             selectedTaskID = nil
         }
@@ -86,11 +96,13 @@ struct PlannerView: View {
                 if !dialOnTrailingEdge {
                     addButton
                     Spacer(minLength: 0)
+                    planButton
                     reviewButton
                 }
                 WeekStrip(day: $day) { model.plans.tasks(on: $0) }
                 if dialOnTrailingEdge {
                     reviewButton
+                    planButton
                     Spacer(minLength: 0)
                     addButton
                 }
@@ -116,6 +128,23 @@ struct PlannerView: View {
         .keyboardShortcut("r", modifiers: .command)
         .help(Text("Week in Review"))
         .accessibilityLabel(Text("Week in Review"))
+    }
+
+    private var planButton: some View {
+        Button {
+            model.planDay()
+        } label: {
+            Image(systemName: "sunrise.fill")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(OdakPalette.ink.opacity(0.7))
+                .frame(width: 40, height: 40)
+                .background(OdakPalette.bands[0], in: Circle())
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .keyboardShortcut("d", modifiers: .command)
+        .help(Text("Plan the Day"))
+        .accessibilityLabel(Text("Plan the Day"))
     }
 
     private var addButton: some View {

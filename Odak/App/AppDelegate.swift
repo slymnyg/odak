@@ -13,8 +13,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
         model.blocking.clearStaleBlocks()
         if !isRunningTests {
+            model.startWatchingStorage()
             model.startActivityTracking()
             model.showPlanner()
+            model.startDayRhythm()
         }
     }
 
@@ -41,5 +43,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .list]
+    }
+
+    /// Clicking a notification opens the planner; the morning invitation opens it on the sheet.
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        let identifier = response.notification.request.identifier
+        await MainActor.run {
+            if identifier == Notifier.planDayIdentifier {
+                model.planDay()
+            } else {
+                model.showPlanner()
+            }
+        }
     }
 }

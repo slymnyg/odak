@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Plan the Day: a morning sheet (⌘D) where you type what matters, most important first, and each task lands in the first free time around your breaks; long tasks continue after a break and anything that will not fit is flagged. Working hours and standing breaks such as lunch are asked once and reused every day, and yesterday's tasks are one click away.
+- Reminders: an invitation to plan the day at a time you choose, and a notification before each planned task.
+- Data folder: plans, focus history and project time can live in iCloud Drive or any synced folder, so every Mac that points at the same folder shows them. Plans are stored one file per day and history one file per Mac, so two Macs do not overwrite each other, and changes made elsewhere appear while the app is open. Odak itself still makes no network requests. Existing data is copied into the new layout on first launch; the old files are left in place.
 - Daylight on the planner: the paper and the dial's bands take the colour of the part of the day on screen, cool in the morning, golden in the afternoon, amber in the evening and deep blue at night.
 - The dial clicks under the finger: trackpad haptics mark every half hour while a task is dragged out, harder on the hour, and the dial settles with a spring when the part of the day changes.
 - The running focus arc is led by a glowing tip, and a finished session is marked by a glint that runs along its arc.
