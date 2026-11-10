@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Odak</title>
+<style>
+  :root { --paper: #F3EFE8; --ink: #1B1E26; --soft: rgba(27, 30, 38, .58); --ring: #DDD6C8; --tint: #179C56; }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #15171C; --ink: #F1EEE8; --soft: rgba(241, 238, 232, .6); --ring: #282C34; --tint: #2FBF70; }
+  }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: grid; place-items: center; background: var(--paper); color: var(--ink);
+    font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  }
+  main { text-align: center; padding: 24px; max-width: 520px; }
+  svg { width: 132px; height: 132px; }
+  .track { fill: none; stroke: var(--ring); stroke-width: 9; }
+  .arc {
+    fill: none; stroke: var(--tint); stroke-width: 9; stroke-linecap: round;
+    stroke-dasharray: 239 320; transform: rotate(-90deg); transform-origin: 50% 50%;
+    animation: draw 1.1s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  .hub { fill: var(--ink); }
+  @keyframes draw { from { stroke-dasharray: 0 320; } }
+  @media (prefers-reduced-motion: reduce) { .arc { animation: none; } }
+  h1 { font: 700 38px/1.15 "New York", "Iowan Old Style", Georgia, serif; margin: 28px 0 10px; }
+  p { margin: 0; color: var(--soft); }
+  b { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <svg viewBox="0 0 120 120" aria-hidden="true">
+    <circle class="track" cx="60" cy="60" r="51"/>
+    <circle class="arc" cx="60" cy="60" r="51"/>
+    <circle class="hub" cx="60" cy="60" r="7"/>
+  </svg>
+  <h1 id="title">Back to your focus</h1>
+  <p id="body"></p>
+</main>
+<script>
+  // The domain arrives in the fragment; it is only ever written as text.
+  var domain = decodeURIComponent(location.hash.slice(1)).replace(/[^a-z0-9.-]/gi, "");
+  var turkish = (navigator.language || "").toLowerCase().indexOf("tr") === 0;
+  var body = document.getElementById("body");
+  var name = document.createElement("b");
+  name.textContent = domain;
+  if (turkish) {
+    document.documentElement.lang = "tr";
+    document.getElementById("title").textContent = "Odağına dön";
+    body.append(name, domain ? ", odak seansın bitene kadar engelli." : "Bu site odak seansın bitene kadar engelli.");
+  } else {
+    body.append(name, domain ? " is blocked until your focus session ends." : "This site is blocked until your focus session ends.");
+  }
+</script>
+</body>
+</html>

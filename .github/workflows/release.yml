@@ -1,0 +1,135 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    env:
+      # Optional notarization. If any of these secrets is missing, the
+      # notarization steps are skipped and the app is ad-hoc signed instead.
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+      DEVELOPER_ID_P12: ${{ secrets.DEVELOPER_ID_P12 }}            # base64 of the .p12
+      DEVELOPER_ID_P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from tag
+        id: meta
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Check for notarization secrets
+        id: notary
+        run: |
+          if [ -n "$APPLE_ID" ] && [ -n "$APPLE_TEAM_ID" ] && [ -n "$APPLE_APP_PASSWORD" ] \
+             && [ -n "$DEVELOPER_ID_P12" ] && [ -n "$DEVELOPER_ID_P12_PASSWORD" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "Notarization secrets found."
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Notarization secrets not set. Building an ad-hoc signed release."
+          fi
+
+      - name: Install XcodeGen and generate project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Build Release
+        run: |
+          xcodebuild build \
+            -project Odak.xcodeproj \
+            -scheme Odak \
+            -configuration Release \
+            -destination 'platform=macOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+          cp -R build/Build/Products/Release/Odak.app ./Odak.app
+
+      # ---- Signing: ad-hoc (default) ----------------------------------------
+
+      - name: Ad-hoc sign
+        if: steps.notary.outputs.enabled != 'true'
+        run: |
+          codesign --force --deep --sign - Odak.app
+          codesign --verify --verbose Odak.app
+
+      # ---- Signing + notarization (optional) ---------------------------------
+
+      - name: Import Developer ID certificate
+        if: steps.notary.outputs.enabled == 'true'
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/build.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          echo "$DEVELOPER_ID_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$DEVELOPER_ID_P12_PASSWORD" \
+            -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/cert.p12"
+
+      - name: Sign with Developer ID
+        if: steps.notary.outputs.enabled == 'true'
+        run: |
+          IDENTITY=$(security find-identity -v -p codesigning | grep "$APPLE_TEAM_ID" | head -1 | awk -F'"' '{print $2}')
+          codesign --force --deep --options runtime --timestamp --entitlements Odak/Odak.entitlements --sign "$IDENTITY" Odak.app
+          codesign --verify --strict --verbose Odak.app
+
+      - name: Notarize and staple
+        if: steps.notary.outputs.enabled == 'true'
+        run: |
+          ditto -c -k --keepParent Odak.app notarize.zip
+          xcrun notarytool submit notarize.zip \
+            --apple-id "$APPLE_ID" \
+            --team-id "$APPLE_TEAM_ID" \
+            --password "$APPLE_APP_PASSWORD" \
+            --wait
+          xcrun stapler staple Odak.app
+          rm notarize.zip
+
+      # ---- Package and publish -----------------------------------------------
+
+      - name: Zip
+        id: zip
+        run: |
+          ZIP="Odak-${{ steps.meta.outputs.version }}.zip"
+          ditto -c -k --keepParent Odak.app "$ZIP"
+          SHA=$(shasum -a 256 "$ZIP" | awk '{print $1}')
+          echo "zip=$ZIP" >> "$GITHUB_OUTPUT"
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          echo "$ZIP sha256: $SHA"
+          {
+            echo "### $ZIP"
+            echo
+            echo "sha256: \`$SHA\`"
+            echo
+            echo "Notarized: ${{ steps.notary.outputs.enabled }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.zip.outputs.zip }}
+          body: |
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for changes.
+
+            sha256 (`${{ steps.zip.outputs.zip }}`): `${{ steps.zip.outputs.sha256 }}`
+
+            Notarized: ${{ steps.notary.outputs.enabled }}. If not, right-click Odak.app and choose Open on first launch.
+
+      - name: Print sha256 for the Homebrew cask
+        run: echo "sha256 \"${{ steps.zip.outputs.sha256 }}\""
+
+      - name: Clean up keychain
+        if: always() && steps.notary.outputs.enabled == 'true'
+        run: security delete-keychain "$RUNNER_TEMP/build.keychain-db" || true

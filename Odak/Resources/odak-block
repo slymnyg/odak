@@ -1,0 +1,98 @@
+#!/bin/bash -p
+# Odak website blocker. Installed as /Library/PrivilegedHelperTools/app.odak.block
+# and run as root through a sudoers rule. Compatible with macOS /bin/bash 3.2.
+#
+#   app.odak.block on <domain>...   replace the Odak block in /etc/hosts
+#   app.odak.block off              remove the Odak block
+#   app.odak.block status           print the number of blocked host lines
+# bash -p: ignore BASH_ENV, ENV, SHELLOPTS, BASHOPTS, CDPATH, GLOBIGNORE and
+# exported functions from the environment. Every tool is called by absolute path.
+set -eo pipefail
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+LC_ALL=C
+IFS=$' \t\n'
+export PATH LC_ALL
+umask 022
+
+readonly HOSTS=/etc/hosts
+# /etc is a symlink to /private/etc on macOS. The temporary file must be on the same volume.
+readonly HOSTS_DIR=/private/etc
+readonly BEGIN_MARK="# >>> ODAK BLOCK"
+readonly END_MARK="# <<< ODAK BLOCK"
+readonly DOMAIN_RE='^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$'
+
+usage() {
+  echo "usage: app.odak.block on <domain>... | off | status" >&2
+  exit 2
+}
+
+# Drops every complete Odak block. A begin marker without an end marker is
+# kept as is, so a hand-edited file never loses the lines after it.
+hosts_without_block() {
+  /usr/bin/awk -v b="$BEGIN_MARK" -v e="$END_MARK" '
+    $0==b       { if (s) printf "%s", buf; s=1; buf=$0 "\n"; next }
+    s && $0==e  { s=0; buf=""; next }
+    s           { buf=buf $0 "\n"; next }
+                { print }
+    END         { if (s) printf "%s", buf }
+  ' "$HOSTS"
+}
+
+blocked_line_count() {
+  /usr/bin/awk -v b="$BEGIN_MARK" -v e="$END_MARK" \
+    '$0==b{s=1;next} $0==e{s=0;next} s{n++} END{print n+0}' "$HOSTS"
+}
+
+flush_dns() {
+  /usr/bin/dscacheutil -flushcache 2>/dev/null || true
+  /usr/bin/killall -HUP mDNSResponder 2>/dev/null || true
+}
+
+[ "$(/usr/bin/id -u)" -eq 0 ] || { echo "app.odak.block must run as root" >&2; exit 1; }
+
+command="${1:-}"
+[ $# -gt 0 ] && shift
+
+case "$command" in
+  on)
+    [ $# -gt 0 ] || usage
+    for domain in "$@"; do
+      if [ "${#domain}" -gt 253 ] || ! [[ "$domain" =~ $DOMAIN_RE ]]; then
+        echo "invalid domain: $domain" >&2
+        exit 1
+      fi
+    done
+    ;;
+  off)
+    [ $# -eq 0 ] || usage
+    ;;
+  status)
+    [ $# -eq 0 ] || usage
+    blocked_line_count
+    exit 0
+    ;;
+  *) usage ;;
+esac
+
+# The new file is built next to the real one and renamed over it, so /etc/hosts
+# is either the old file or the complete new one. If awk fails, set -e stops
+# the script before the rename and /etc/hosts is left as it was.
+TMP="$(/usr/bin/mktemp "$HOSTS_DIR/.hosts.odak.XXXXXX")"
+trap '/bin/rm -f "$TMP"' EXIT
+
+hosts_without_block > "$TMP"
+if [ "$command" = on ]; then
+  {
+    echo "$BEGIN_MARK"
+    for domain in "$@"; do
+      echo "0.0.0.0 $domain"
+      echo ":: $domain"
+    done
+    echo "$END_MARK"
+  } >> "$TMP"
+fi
+
+/bin/chmod 644 "$TMP"
+/usr/sbin/chown root:wheel "$TMP"
+/bin/mv -f "$TMP" "$HOSTS_DIR/hosts"
+flush_dns

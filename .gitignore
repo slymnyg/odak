@@ -1,0 +1,25 @@
+.DS_Store
+build/
+DerivedData/
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Yerel çalışma dosyaları
+.reference/
+dmg-stage/
+*-log.txt
+launch-out.txt
+*.applescript
+HANDOFF.md
+build-and-test.sh
+rebuild-install.sh
+diag-block.sh
+make-dmg.sh
+diag-block.txt
