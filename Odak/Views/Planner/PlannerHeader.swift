@@ -21,7 +21,36 @@ struct PlannerHeader: View {
                 ChipPicker(options: DaySegment.allCases, selection: $segment) { Text($0.name) }
                 .padding(.leading, -10)
             }
+
+            Spacer(minLength: 0)
+
+            SettingsLink {
+                Image(systemName: "gearshape")
+            }
+            .buttonStyle(CornerButtonStyle())
+            .help(Text("Settings"))
+            .accessibilityLabel(Text("Settings"))
+            .frame(maxHeight: .infinity, alignment: .top)
         }
+        .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+/// A bare icon that keeps to itself until the pointer comes near.
+private struct CornerButtonStyle: ButtonStyle {
+    @State private var isHovered = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 15, weight: .medium))
+            .foregroundStyle(OdakPalette.ink.opacity(isHovered ? 0.85 : 0.32))
+            .frame(width: 30, height: 30)
+            .background(OdakPalette.bands[0].opacity(isHovered ? 1 : 0), in: Circle())
+            .rotationEffect(.degrees(isHovered ? 30 : 0))
+            .scaleEffect(configuration.isPressed ? 0.9 : 1)
+            .contentShape(Circle())
+            .animation(.snappy(duration: 0.25), value: isHovered)
+            .onHover { isHovered = $0 }
     }
 }
 
