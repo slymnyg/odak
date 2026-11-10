@@ -8,15 +8,17 @@ struct DialFace: View {
     var body: some View {
         Canvas { context, _ in
             let center = metrics.center
+            let daylight = Daylight.tint(segment)
 
+            // Each band takes a little more of the day's light than the one inside it.
             for lane in TaskLane.allCases {
-                context.stroke(
-                    Path(ellipseIn: circle(radius: metrics.laneMid(lane))),
-                    with: .color(OdakPalette.band(lane)),
-                    lineWidth: metrics.laneWidth
-                )
+                let ring = Path(ellipseIn: circle(radius: metrics.laneMid(lane)))
+                context.stroke(ring, with: .color(OdakPalette.band(lane)), lineWidth: metrics.laneWidth)
+                context.stroke(ring, with: .color(daylight.opacity(0.16 + 0.09 * Double(lane.index))), lineWidth: metrics.laneWidth)
             }
-            context.fill(Path(ellipseIn: circle(radius: metrics.faceRadius)), with: .color(OdakPalette.face))
+            let face = Path(ellipseIn: circle(radius: metrics.faceRadius))
+            context.fill(face, with: .color(OdakPalette.face))
+            context.fill(face, with: .color(daylight.opacity(0.06)))
 
             for step in 0..<(DialGeometry.minutesPerTurn / 5) {
                 let minutes = Double(step * 5)

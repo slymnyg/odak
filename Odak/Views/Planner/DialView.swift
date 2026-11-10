@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct DialView: View {
@@ -90,14 +91,20 @@ struct DialView: View {
         DragGesture(minimumDistance: 4)
             .onChanged { value in
                 guard let lane = preview?.lane ?? metrics.lane(at: value.startLocation) else { return }
-                preview = Preview(
-                    lane: lane,
-                    minutes: DialGeometry.dragRange(
-                        from: DialGeometry.minutes(at: value.startLocation, center: metrics.center),
-                        to: DialGeometry.minutes(at: value.location, center: metrics.center),
-                        in: segment
-                    )
+                let minutes = DialGeometry.dragRange(
+                    from: DialGeometry.minutes(at: value.startLocation, center: metrics.center),
+                    to: DialGeometry.minutes(at: value.location, center: metrics.center),
+                    in: segment
                 )
+                if let previous = preview?.minutes, previous != minutes {
+                    // Every slot clicks under the finger like a detent; whole hours click harder.
+                    let moved = previous.upperBound != minutes.upperBound ? minutes.upperBound : minutes.lowerBound
+                    NSHapticFeedbackManager.defaultPerformer.perform(
+                        moved.isMultiple(of: 60) ? .levelChange : .alignment,
+                        performanceTime: .now
+                    )
+                }
+                preview = Preview(lane: lane, minutes: minutes)
             }
             .onEnded { _ in
                 if let preview, preview.minutes.upperBound > preview.minutes.lowerBound {

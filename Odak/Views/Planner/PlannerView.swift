@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct PlannerView: View {
@@ -20,6 +21,11 @@ struct PlannerView: View {
             let metrics = DialMetrics(size: geometry.size, half: segment.clockHalf)
             let dialOnTrailingEdge = segment.clockHalf == .left
             ZStack {
+                DaylightGlow(segment: segment, center: metrics.center, radius: metrics.radius)
+                    .id(segment)
+                    .transition(.opacity)
+                    .zIndex(-1)
+
                 DialView(
                     day: day,
                     segment: segment,
@@ -39,7 +45,7 @@ struct PlannerView: View {
                     .frame(maxWidth: .infinity, alignment: dialOnTrailingEdge ? .leading : .trailing)
                     .zIndex(1)
             }
-            .animation(.spring(duration: 0.6, bounce: 0.12), value: segment)
+            .animation(.spring(duration: 0.75, bounce: 0.24), value: segment)
             .animation(.snappy(duration: 0.3), value: day)
         }
         .background(OdakPalette.paper)
@@ -57,6 +63,9 @@ struct PlannerView: View {
         }
         .onChange(of: day) {
             selectedTaskID = nil
+        }
+        .onChange(of: segment) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .now)
         }
     }
 
@@ -203,11 +212,11 @@ private extension AnyTransition {
         let anchor = UnitPoint(x: center.x / max(size.width, 1), y: center.y / max(size.height, 1))
         return .asymmetric(
             insertion: .modifier(
-                active: DialSpin(degrees: -75, opacity: 0, anchor: anchor),
+                active: DialSpin(degrees: -90, opacity: 0, anchor: anchor),
                 identity: DialSpin(degrees: 0, opacity: 1, anchor: anchor)
             ),
             removal: .modifier(
-                active: DialSpin(degrees: 75, opacity: 0, anchor: anchor),
+                active: DialSpin(degrees: 90, opacity: 0, anchor: anchor),
                 identity: DialSpin(degrees: 0, opacity: 1, anchor: anchor)
             )
         )
