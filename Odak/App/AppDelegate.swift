@@ -13,6 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
         model.blocking.clearStaleBlocks()
         if !isRunningTests {
+            model.startActivityTracking()
             model.showPlanner()
         }
     }
@@ -30,6 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         model.blocking.clearBlocksBeforeExit()
+        model.stopActivityTracking()
     }
 }
 

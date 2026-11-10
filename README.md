@@ -73,7 +73,13 @@ Nothing outside the markers is changed. The section is removed when the session 
 
 Browsers get a second layer. Chrome and others often resolve names themselves ("secure DNS") or keep a connection open, and then never look at `/etc/hosts`. So during a session Odak also checks the tabs of Safari, Chrome, Dia, Arc, Brave, Edge and Vivaldi every two seconds and sends any tab on a blocked site, or one of its subdomains, to a local "blocked" page. macOS asks once per browser whether Odak may control it (System Settings > Privacy & Security > Automation). Odak reads tab addresses only to compare them with your list; nothing is stored or sent anywhere.
 
-App blocking needs no privileges. Odak hides the apps you chose while a session is running. It does not quit them, so you lose no work.
+App blocking needs no privileges.
+
+## Week in review
+
+Odak can tell you where the week went without you logging anything. It watches one folder (by default `~/Development`) and treats every git repository in it as a project. When a project's files change, that five-minute slot counts as work on it; pauses of up to ten minutes are bridged. The week in review (the chart button next to the week strip, or Cmd-R) shows hours per day, time per project and the commits you made, read with `git log`.
+
+This is an estimate from file changes: reading, thinking and work outside the folder are not seen, and changes made by tools in a project count as work on it. Build output and dependency folders are ignored. Everything stays in `~/Library/Application Support/Odak/activity.json`; turn tracking off or pick another folder in Settings > General. Odak hides the apps you chose while a session is running. It does not quit them, so you lose no work.
 
 ### Why hosts and not a network extension
 

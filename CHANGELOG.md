@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Browser tab check during sessions: tabs on a blocked site or its subdomains are sent to a local "blocked" page in Safari, Chrome, Dia, Arc, Brave, Edge and Vivaldi. This covers browsers that skip `/etc/hosts` (secure DNS, open connections). Needs the macOS Automation permission once per browser.
+- Week in review: hours per day, time per project and your commits, tracked automatically from file changes in the git repositories under a projects folder (default `~/Development`).
 - Day planner redesign: an oversized half dial per part of the day, category rings (Focus, Meeting, Personal), a week strip and motion.
 
 ## [1.0.0] - Unreleased

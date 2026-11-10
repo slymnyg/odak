@@ -12,6 +12,8 @@ enum Preferences {
         static let blockDistractions = "blockDistractions"
         static let blockedSites = "blockedSites"
         static let blockedApps = "blockedApps"
+        static let trackActivity = "trackActivity"
+        static let activityFolder = "activityFolder"
     }
 
     enum Default {
@@ -23,6 +25,8 @@ enum Preferences {
         static let showSeconds = true
         static let showFocusScreen = true
         static let blockDistractions = true
+        static let trackActivity = true
+        static let activityFolder = NSHomeDirectory() + "/Development"
         static let blockedSites = [
             "youtube.com", "youtu.be", "x.com", "twitter.com", "reddit.com", "instagram.com",
         ].joined(separator: "\n")
@@ -44,6 +48,8 @@ enum Preferences {
             Key.showFocusScreen: Default.showFocusScreen,
             Key.blockDistractions: Default.blockDistractions,
             Key.blockedSites: Default.blockedSites,
+            Key.trackActivity: Default.trackActivity,
+            Key.activityFolder: Default.activityFolder,
         ])
     }
 
@@ -54,6 +60,13 @@ enum Preferences {
     static var playSound: Bool { defaults.bool(forKey: Key.playSound) }
     static var showFocusScreen: Bool { defaults.bool(forKey: Key.showFocusScreen) }
     static var blockDistractions: Bool { defaults.bool(forKey: Key.blockDistractions) }
+    static var trackActivity: Bool { defaults.bool(forKey: Key.trackActivity) }
+
+    /// The folder whose repositories count as projects.
+    static var activityFolder: URL {
+        URL(fileURLWithPath: defaults.string(forKey: Key.activityFolder) ?? Default.activityFolder, isDirectory: true)
+    }
+
     static var blockedSites: String { defaults.string(forKey: Key.blockedSites) ?? "" }
 
     static var blockedApps: [BlockedApp] {

@@ -10,6 +10,10 @@ struct GeneralSettingsView: View {
     @AppStorage(Preferences.Key.showSeconds) private var showSeconds = Preferences.Default.showSeconds
     @AppStorage(Preferences.Key.showFocusScreen) private var showFocusScreen = Preferences.Default.showFocusScreen
 
+    @AppStorage(Preferences.Key.trackActivity) private var trackActivity = Preferences.Default.trackActivity
+    @AppStorage(Preferences.Key.activityFolder) private var activityFolder = Preferences.Default.activityFolder
+    @Environment(AppModel.self) private var model
+
     @State private var loginStatus = SMAppService.mainApp.status
     @State private var loginError: String? = nil
 
@@ -37,6 +41,24 @@ struct GeneralSettingsView: View {
                 Toggle("Play sound when a session ends", isOn: $playSound)
             }
 
+            Section("Projects") {
+                Toggle("Track time per project", isOn: $trackActivity)
+                LabeledContent("Projects folder") {
+                    HStack {
+                        Text(verbatim: (activityFolder as NSString).abbreviatingWithTildeInPath)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                        Button("Choose…", action: chooseActivityFolder)
+                    }
+                }
+                Text("Each git repository in this folder is a project. Odak notes when its files change and reads your commits for the week in review. Nothing leaves your Mac.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .onChange(of: trackActivity) { model.startActivityTracking() }
+            .onChange(of: activityFolder) { model.startActivityTracking() }
+
             Section("Startup") {
                 Toggle("Launch at login", isOn: launchAtLogin)
                 if loginStatus == .requiresApproval {
@@ -57,6 +79,17 @@ struct GeneralSettingsView: View {
             }
         }
         .formStyle(.grouped)
+    }
+
+    private func chooseActivityFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = URL(fileURLWithPath: activityFolder, isDirectory: true)
+        if panel.runModal() == .OK, let url = panel.url {
+            activityFolder = url.path
+        }
     }
 
     private var launchAtLogin: Binding<Bool> {

@@ -59,6 +59,16 @@
         }
       }
     },
+    "%lld commits" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld commit"
+          }
+        }
+      }
+    },
     "%lld days" : {
       "localizations" : {
         "en" : {
@@ -333,12 +343,32 @@
         }
       }
     },
+    "Choose…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seç…"
+          }
+        }
+      }
+    },
     "Clean Up" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Temizle"
+          }
+        }
+      }
+    },
+    "Commits" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commit"
           }
         }
       }
@@ -403,6 +433,16 @@
         }
       }
     },
+    "Done" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
+          }
+        }
+      }
+    },
     "Drag along a ring to plan a task." : {
       "localizations" : {
         "tr" : {
@@ -419,6 +459,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Süre"
+          }
+        }
+      }
+    },
+    "Each git repository in this folder is a project. Odak notes when its files change and reads your commits for the week in review. Nothing leaves your Mac." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu klasördeki her git deposu bir projedir. Odak, dosyaları değiştiğinde not alır ve haftalık özet için commit'lerini okur. Hiçbir şey Mac'inden dışarı çıkmaz."
           }
         }
       }
@@ -553,6 +603,16 @@
         }
       }
     },
+    "In focus sessions" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odak seanslarında"
+          }
+        }
+      }
+    },
     "Install Helper…" : {
       "localizations" : {
         "tr" : {
@@ -683,6 +743,16 @@
         }
       }
     },
+    "Next Week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki Hafta"
+          }
+        }
+      }
+    },
     "Night" : {
       "localizations" : {
         "tr" : {
@@ -733,6 +803,16 @@
         }
       }
     },
+    "Nothing recorded this week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu hafta kayıt yok"
+          }
+        }
+      }
+    },
     "Odak blocks websites by adding them to /etc/hosts, which works in every browser. The helper is a small script in /Library/PrivilegedHelperTools plus a sudoers rule that lets Odak run only that script without asking for your password each time. Installing asks for your administrator password once." : {
       "localizations" : {
         "tr" : {
@@ -773,6 +853,16 @@
         }
       }
     },
+    "Odak notes which project you work on whenever files change in %@." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odak, %@ içinde dosyalar değiştikçe hangi projede çalıştığını not eder."
+          }
+        }
+      }
+    },
     "One site per line. Pasted links are fine; www and mobile versions are included." : {
       "localizations" : {
         "tr" : {
@@ -789,6 +879,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Giriş Öğelerini Aç"
+          }
+        }
+      }
+    },
+    "Other projects" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer projeler"
           }
         }
       }
@@ -863,12 +963,62 @@
         }
       }
     },
+    "Previous Week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önceki Hafta"
+          }
+        }
+      }
+    },
+    "Project tracking is off. Turn it on in Settings → General." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proje takibi kapalı. Ayarlar → Genel'den açabilirsin."
+          }
+        }
+      }
+    },
+    "Projects" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projeler"
+          }
+        }
+      }
+    },
+    "Projects folder" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projeler klasörü"
+          }
+        }
+      }
+    },
     "Quit" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Çık"
+          }
+        }
+      }
+    },
+    "Reading your repositories…" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depoların okunuyor…"
           }
         }
       }
@@ -1097,6 +1247,26 @@
         }
       }
     },
+    "This Week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu Hafta"
+          }
+        }
+      }
+    },
+    "Time is estimated from file changes in %@. Pauses of up to %lld minutes count as work." : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Süre, %1$@ içindeki dosya değişikliklerinden tahmin edilir. %2$lld dakikaya kadar aralar çalışma sayılır."
+          }
+        }
+      }
+    },
     "Timer" : {
       "localizations" : {
         "tr" : {
@@ -1133,6 +1303,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toplam seans"
+          }
+        }
+      }
+    },
+    "Track time per project" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proje başına süreyi izle"
           }
         }
       }
@@ -1197,12 +1377,32 @@
         }
       }
     },
+    "Week in Review" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haftalık Özet"
+          }
+        }
+      }
+    },
     "What are you working on?" : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ne üzerinde çalışıyorsun?"
+          }
+        }
+      }
+    },
+    "Worked" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çalışılan"
           }
         }
       }
@@ -1263,6 +1463,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gecen"
+          }
+        }
+      }
+    },
+    "Your week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haftan"
           }
         }
       }

@@ -7,6 +7,7 @@ final class AppModel {
     let timer = FocusTimer()
     let history = SessionStore()
     let plans: PlanStore
+    let activity: ActivityStore
     let notifier: Notifier
     let blocking: BlockingController
     let focusScreen = FocusScreenController()
@@ -16,12 +17,43 @@ final class AppModel {
     private(set) var isFocusScreenVisible = false
 
     @ObservationIgnored private var ticker: Task<Void, Never>? = nil
+    @ObservationIgnored private var activityWatcher: ActivityWatcher?
+    @ObservationIgnored private var activitySaver: Timer?
 
-    init(plans: PlanStore? = nil) {
+    init(plans: PlanStore? = nil, activity: ActivityStore? = nil) {
         self.plans = plans ?? PlanStore()
+        self.activity = activity ?? ActivityStore()
         let notifier = Notifier()
         self.notifier = notifier
         blocking = BlockingController(notifier: notifier)
+    }
+
+    /// Starts (or restarts, after a settings change) watching the projects folder.
+    func startActivityTracking() {
+        stopActivityTracking()
+        let folder = Preferences.activityFolder
+        var isDirectory: ObjCBool = false
+        guard Preferences.trackActivity,
+              FileManager.default.fileExists(atPath: folder.path, isDirectory: &isDirectory), isDirectory.boolValue else { return }
+
+        let watcher = ActivityWatcher(root: folder) { [weak self] projects in
+            self?.activity.record(projects, at: .now)
+        }
+        watcher.start()
+        activityWatcher = watcher
+        activitySaver = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.activity.flush()
+            }
+        }
+    }
+
+    func stopActivityTracking() {
+        activityWatcher?.stop()
+        activityWatcher = nil
+        activitySaver?.invalidate()
+        activitySaver = nil
+        activity.flush()
     }
 
     func primaryAction() {

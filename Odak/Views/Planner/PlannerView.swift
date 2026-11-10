@@ -6,6 +6,7 @@ struct PlannerView: View {
     @State private var segment: DaySegment
     @State private var selectedTaskID: PlannedTask.ID? = nil
     @State private var draft: TaskDraft? = nil
+    @State private var showsReview = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(date: Date = .now) {
@@ -43,13 +44,16 @@ struct PlannerView: View {
         }
         .background(PlannerPalette.paper)
         .ignoresSafeArea()
-        .frame(minWidth: 900, minHeight: 600)
+        .frame(minWidth: 940, minHeight: 600)
         .sheet(item: $draft) { draft in
             TaskEditor(
                 draft: draft,
                 onSave: save,
                 onDelete: draft.isNew ? nil : { deleteTask(withID: draft.id) }
             )
+        }
+        .sheet(isPresented: $showsReview) {
+            WeekReviewView(date: day)
         }
         .onChange(of: day) {
             selectedTaskID = nil
@@ -69,13 +73,15 @@ struct PlannerView: View {
             )
             .padding(.top, 40)
 
-            HStack(spacing: 16) {
+            HStack(spacing: 10) {
                 if !dialOnTrailingEdge {
                     addButton
                     Spacer(minLength: 0)
+                    reviewButton
                 }
                 WeekStrip(day: $day) { model.plans.tasks(on: $0) }
                 if dialOnTrailingEdge {
+                    reviewButton
                     Spacer(minLength: 0)
                     addButton
                 }
@@ -84,6 +90,23 @@ struct PlannerView: View {
         .padding(.horizontal, 36)
         .padding(.top, 52)
         .padding(.bottom, 26)
+    }
+
+    private var reviewButton: some View {
+        Button {
+            showsReview = true
+        } label: {
+            Image(systemName: "chart.bar.fill")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(PlannerPalette.ink.opacity(0.7))
+                .frame(width: 40, height: 40)
+                .background(PlannerPalette.bands[0], in: Circle())
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .keyboardShortcut("r", modifiers: .command)
+        .help(Text("Week in Review"))
+        .accessibilityLabel(Text("Week in Review"))
     }
 
     private var addButton: some View {
