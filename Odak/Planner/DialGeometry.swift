@@ -92,18 +92,29 @@ enum DialGeometry {
         return calendar.date(bySettingHour: clamped / 60, minute: clamped % 60, second: 0, of: dayStart) ?? dayStart
     }
 
+    /// Minutes of `day` with seconds as a fraction, clamped to the day like `dayMinutes`.
+    static func preciseDayMinutes(for date: Date, on day: Date, calendar: Calendar = .current) -> Double {
+        let dayStart = calendar.startOfDay(for: day)
+        return min(max(date.timeIntervalSince(dayStart) / 60, 0), Double(minutesPerDay))
+    }
+
     /// The part of `start..<end` that falls in the given segment of `day`, in minutes of that day.
+    /// Planned tasks sit on whole minutes; pass `precise` for live time that should move smoothly.
     static func visibleMinutes(
         start: Date,
         end: Date,
         segment: DaySegment,
         day: Date,
+        precise: Bool = false,
         calendar: Calendar = .current
     ) -> ClosedRange<Double>? {
-        let lower = max(dayMinutes(for: start, on: day, calendar: calendar), segment.startMinutes)
-        let upper = min(dayMinutes(for: end, on: day, calendar: calendar), segment.endMinutes)
+        func minutes(_ date: Date) -> Double {
+            precise ? preciseDayMinutes(for: date, on: day, calendar: calendar) : Double(dayMinutes(for: date, on: day, calendar: calendar))
+        }
+        let lower = max(minutes(start), Double(segment.startMinutes))
+        let upper = min(minutes(end), Double(segment.endMinutes))
         guard upper > lower else { return nil }
-        return Double(lower)...Double(upper)
+        return lower...upper
     }
 }
 
@@ -128,7 +139,7 @@ struct DialMetrics {
     var handLength: CGFloat { radius + 10 }
 
     /// Width of the window strip the dial needs, including room for the hand's time label.
-    var visibleWidth: CGFloat { radius * 1.17 + 60 }
+    var visibleWidth: CGFloat { radius * 1.17 + 96 }
 
     func laneInner(_ lane: TaskLane) -> CGFloat {
         lanesInner + CGFloat(lane.index) * laneWidth

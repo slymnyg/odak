@@ -78,6 +78,17 @@ final class DialGeometryTests: XCTestCase {
         XCTAssertNil(DialGeometry.visibleMinutes(start: date(8), end: date(9), segment: .afternoon, day: day, calendar: calendar))
     }
 
+    func testLiveTimeKeepsItsSeconds() {
+        let day = date(0)
+        let start = date(13, 30).addingTimeInterval(30), end = date(14, 0).addingTimeInterval(15)
+        let whole = DialGeometry.visibleMinutes(start: start, end: end, segment: .afternoon, day: day, calendar: calendar)
+        let precise = DialGeometry.visibleMinutes(start: start, end: end, segment: .afternoon, day: day, precise: true, calendar: calendar)
+        XCTAssertEqual(whole, 810...840)
+        XCTAssertEqual(precise?.lowerBound ?? 0, 810.5, accuracy: 1e-6)
+        XCTAssertEqual(precise?.upperBound ?? 0, 840.25, accuracy: 1e-6)
+        XCTAssertNil(DialGeometry.visibleMinutes(start: start, end: end, segment: .morning, day: day, precise: true, calendar: calendar))
+    }
+
     func testLanesRunOutwardFromTheFace() {
         let metrics = DialMetrics(size: CGSize(width: 1000, height: 688), half: .left)
         XCTAssertEqual(metrics.radius, 300, accuracy: accuracy)

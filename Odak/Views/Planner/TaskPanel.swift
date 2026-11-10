@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct TaskPanel: View {
+    @Environment(AppModel.self) private var model
     let day: Date
     let tasks: [PlannedTask]
     let selectedTask: PlannedTask?
@@ -21,7 +22,10 @@ struct TaskPanel: View {
         let upcoming = Array(tasks.filter { $0.start >= reference && $0.id != shownTask?.id }.prefix(3))
 
         VStack(alignment: .leading, spacing: 28) {
-            if let shownTask {
+            if model.timer.isActive {
+                FocusPanel()
+                    .transition(.blurReplace)
+            } else if let shownTask {
                 CurrentTaskView(task: shownTask, now: now, onEdit: onEdit)
                     .id(shownTask.id)
                     .transition(.blurReplace)
@@ -32,7 +36,15 @@ struct TaskPanel: View {
                         .foregroundStyle(OdakPalette.ink.opacity(0.75))
                     Text("Drag along a ring to plan a task.")
                         .foregroundStyle(OdakPalette.ink.opacity(0.5))
+                    Button {
+                        model.startFocus()
+                    } label: {
+                        Label("Start Focus", systemImage: "scope")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .padding(.top, 10)
                 }
+                .transition(.blurReplace)
             }
 
             if !upcoming.isEmpty {
@@ -52,6 +64,7 @@ struct TaskPanel: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .animation(.snappy(duration: 0.3), value: shownTask?.id)
+        .animation(.snappy(duration: 0.35), value: model.timer.isActive)
     }
 }
 
@@ -89,23 +102,22 @@ private struct CurrentTaskView: View {
                     .lineLimit(3)
             }
 
-            HStack {
+            HStack(spacing: 8) {
                 Button {
                     if let focusMinutes {
                         model.startFocus(minutes: focusMinutes, intention: task.title)
                     }
                 } label: {
                     Label("Start Focus", systemImage: "scope")
-                        .padding(.horizontal, 6)
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(focusMinutes == nil || model.timer.isActive)
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(focusMinutes == nil)
 
                 Button("Edit…") {
                     onEdit(task)
                 }
+                .buttonStyle(QuietButtonStyle())
             }
-            .controlSize(.large)
             .padding(.top, 4)
 
             if let focusMinutes {

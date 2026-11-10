@@ -1357,6 +1357,16 @@
         }
       }
     },
+    "Until %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ saatine kadar"
+          }
+        }
+      }
+    },
     "Up Next" : {
       "localizations" : {
         "tr" : {

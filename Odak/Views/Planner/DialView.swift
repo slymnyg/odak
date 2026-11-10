@@ -59,7 +59,9 @@ struct DialView: View {
                 .allowsHitTesting(false)
             }
 
-            ClockHand(day: day, segment: segment, metrics: metrics)
+            FocusLayer(day: day, segment: segment, metrics: metrics)
+
+            LiveHand(day: day, segment: segment, metrics: metrics)
                 .allowsHitTesting(false)
         }
         .simultaneousGesture(createGesture)
@@ -103,5 +105,24 @@ struct DialView: View {
                 }
                 preview = nil
             }
+    }
+}
+
+/// The hand, told how much of the running focus session is left. Kept apart from `DialView` so the
+/// timer's once-a-second updates redraw only this.
+private struct LiveHand: View {
+    @Environment(AppModel.self) private var model
+    let day: Date
+    let segment: DaySegment
+    let metrics: DialMetrics
+
+    var body: some View {
+        let timer = model.timer
+        ClockHand(
+            day: day,
+            segment: segment,
+            metrics: metrics,
+            focusMinutesLeft: timer.isFocusing ? Countdown.minutesRemaining(for: timer.remaining) : nil
+        )
     }
 }

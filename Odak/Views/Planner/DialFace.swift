@@ -44,6 +44,15 @@ struct DialFace: View {
                 )
             }
 
+            // Half hours get a small "30", so minutes can be read off the face without counting ticks.
+            let minuteFont = Font.system(size: max(metrics.radius * 0.034, 8.5), weight: .semibold, design: .rounded)
+            for hour in firstHour..<(firstHour + DaySegment.length / 60) {
+                context.draw(
+                    Text(verbatim: "30").font(minuteFont).foregroundStyle(OdakPalette.ink.opacity(0.35)),
+                    at: DialGeometry.point(forMinutes: Double(hour * 60 + 30), radius: metrics.numberRadius, center: center)
+                )
+            }
+
             // Lane names sit in the first minutes of the segment, under any task planned there.
             let labelMinutes = Double(segment.startMinutes) + 16
             for lane in TaskLane.allCases {
