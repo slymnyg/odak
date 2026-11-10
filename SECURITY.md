@@ -31,6 +31,6 @@ The worst a malicious local process can do with it is block domains or clear Oda
 
 ## Reporting a vulnerability
 
-Please do not open a public issue. Email security@example.com (placeholder, to be replaced) with a description and, if possible, steps to reproduce. I will reply within a week and credit you in the changelog unless you prefer otherwise.
+Please do not open a public issue. Use [Report a vulnerability](https://github.com/slymnyg/odak/security/advisories/new) to reach me privately with a description and, if possible, steps to reproduce. I will reply within a week and credit you in the changelog unless you prefer otherwise.
 
 Only the latest release is supported.

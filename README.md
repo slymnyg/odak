@@ -1,14 +1,8 @@
-<!--
-  docs/screenshot.png does not exist yet; add a real screenshot before publishing.
--->
-
 # Odak
 
 Odak (Turkish for "focus") is a free macOS menu bar timer that blocks distracting websites and hides distracting apps while a focus session is running. It also has a simple day planner and an optional full-screen focus screen.
 
-![Odak in the menu bar](docs/screenshot.png)
-
-*Screenshot to be added.*
+![The day planner, with a focus session running](docs/screenshot.png)
 
 ## Why
 

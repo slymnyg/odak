@@ -45,4 +45,4 @@ All user-facing strings live in `Odak/Resources/Localizable.xcstrings` (English 
 
 ## Security issues
 
-Please do not open a public issue. Email security@example.com (placeholder, to be replaced) or see [SECURITY.md](SECURITY.md).
+Please do not open a public issue. Use [Report a vulnerability](https://github.com/slymnyg/odak/security/advisories/new) to reach me privately or see [SECURITY.md](SECURITY.md).
