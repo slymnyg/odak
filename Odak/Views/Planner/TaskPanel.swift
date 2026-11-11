@@ -19,9 +19,9 @@ struct TaskPanel: View {
         let isToday = calendar.isDate(day, inSameDayAs: now)
         let shownTask = selectedTask ?? (isToday ? tasks.first(where: { $0.contains(now) }) : nil)
         let reference = isToday ? now : calendar.startOfDay(for: day)
-        let upcoming = Array(tasks.filter { $0.start >= reference && $0.id != shownTask?.id }.prefix(3))
+        let upcoming = Array(tasks.filter { $0.start >= reference && $0.id != shownTask?.id }.prefix(model.timer.isActive ? 1 : 2))
 
-        VStack(alignment: .leading, spacing: 28) {
+        VStack(alignment: .leading, spacing: 24) {
             if model.timer.isActive {
                 FocusPanel()
                     .transition(.blurReplace)
@@ -56,13 +56,20 @@ struct TaskPanel: View {
                         .foregroundStyle(OdakPalette.ink.opacity(0.5))
                     ForEach(upcoming) { task in
                         UpcomingTaskRow(task: task)
+                            .contentShape(Rectangle())
+                            .contextMenu {
+                                Button("Edit…") { onEdit(task) }
+                                Menu("Postpone") { PostponeItems(task: task) }
+                            }
                     }
                 }
             }
 
-            Spacer(minLength: 0)
+            WeekGoalsSection()
+                .frame(maxHeight: .infinity, alignment: .top)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .padding(.bottom, 14)
         .animation(.snappy(duration: 0.3), value: shownTask?.id)
         .animation(.snappy(duration: 0.35), value: model.timer.isActive)
     }
@@ -112,6 +119,22 @@ private struct CurrentTaskView: View {
                 }
                 .buttonStyle(PrimaryButtonStyle())
                 .disabled(focusMinutes == nil)
+
+                Menu {
+                    PostponeItems(task: task)
+                } label: {
+                    Text("Postpone")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(OdakPalette.ink.opacity(0.85))
+                        .padding(.horizontal, 16)
+                        .frame(height: 36)
+                        .background(OdakPalette.bands[1], in: Capsule())
+                        .contentShape(Capsule())
+                }
+                .menuStyle(.button)
+                .buttonStyle(.plain)
+                .menuIndicator(.hidden)
+                .fixedSize()
 
                 Button("Edit…") {
                     onEdit(task)

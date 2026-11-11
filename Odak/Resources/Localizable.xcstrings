@@ -51,6 +51,16 @@
         }
       }
     },
+    "%@ later today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün ilerleyen saatte %@"
+          }
+        }
+      }
+    },
     "%@ won't fit today" : {
       "localizations" : {
         "tr" : {
@@ -203,6 +213,26 @@
         }
       }
     },
+    "1 Hour Later" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 saat sonraya"
+          }
+        }
+      }
+    },
+    "30 Minutes Later" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 dakika sonraya"
+          }
+        }
+      }
+    },
     "A long break follows every %lld focus sessions." : {
       "localizations" : {
         "tr" : {
@@ -279,6 +309,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Engellenecek siteleri veya uygulamaları Ayarlar'dan ekle."
+          }
+        }
+      }
+    },
+    "Added to today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugüne eklendi"
           }
         }
       }
@@ -703,6 +743,16 @@
         }
       }
     },
+    "Fit Into Today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugüne yerleştir"
+          }
+        }
+      }
+    },
     "Focus" : {
       "localizations" : {
         "tr" : {
@@ -723,12 +773,42 @@
         }
       }
     },
+    "Focus Now" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi odaklan"
+          }
+        }
+      }
+    },
+    "Focus for %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ odaklan"
+          }
+        }
+      }
+    },
     "Focus for %lld min, until the task ends." : {
       "localizations" : {
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Görev bitene kadar %lld dk odaklan."
+          }
+        }
+      }
+    },
+    "Focus on this for 30 minutes" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buna 30 dakika odaklan"
           }
         }
       }
@@ -759,6 +839,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odak: %lld dk"
+          }
+        }
+      }
+    },
+    "Focused on this week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu hafta odaklanılan süre"
           }
         }
       }
@@ -1003,6 +1093,26 @@
         }
       }
     },
+    "Mark as Done" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti olarak işaretle"
+          }
+        }
+      }
+    },
+    "Mark as Not Done" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitmedi olarak işaretle"
+          }
+        }
+      }
+    },
     "Meeting" : {
       "localizations" : {
         "tr" : {
@@ -1039,6 +1149,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sabah"
+          }
+        }
+      }
+    },
+    "Moved to %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ saatine taşındı"
+          }
+        }
+      }
+    },
+    "Moved to %@, %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ saatine taşındı"
+          }
+        }
+      }
+    },
+    "Moved to tomorrow, %@" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yarın %@ saatine taşındı"
           }
         }
       }
@@ -1083,6 +1223,16 @@
         }
       }
     },
+    "Next Free Time Today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün ilk boş zamana"
+          }
+        }
+      }
+    },
     "Next Week" : {
       "localizations" : {
         "tr" : {
@@ -1109,6 +1259,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Engellenen uygulama yok."
+          }
+        }
+      }
+    },
+    "No free time for it there" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orada ona boş zaman yok"
+          }
+        }
+      }
+    },
+    "No room today" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün yer yok"
           }
         }
       }
@@ -1359,6 +1529,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seans bitince ses çal"
+          }
+        }
+      }
+    },
+    "Postpone" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ertele"
           }
         }
       }
@@ -1623,6 +1803,16 @@
         }
       }
     },
+    "Something to finish this week" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu hafta bitecek bir iş"
+          }
+        }
+      }
+    },
     "Start" : {
       "localizations" : {
         "tr" : {
@@ -1849,6 +2039,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bugün"
+          }
+        }
+      }
+    },
+    "Tomorrow" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yarına"
           }
         }
       }

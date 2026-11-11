@@ -152,32 +152,56 @@ struct PlanDayView: View {
     @ViewBuilder
     private func carryOver(today: Date, existing: [PlannedTask]) -> some View {
         let suggestions = carryOverSuggestions(today: today, existing: existing)
+        let weekGoals = weekGoalSuggestions(existing: existing)
+        if !weekGoals.isEmpty {
+            HStack(spacing: 8) {
+                SectionLabel("This Week")
+                ForEach(weekGoals) { goal in
+                    suggestionChip(goal.title) {
+                        items.append(DayPlanner.Item(title: goal.title, minutes: entryMinutes, lane: .focus))
+                    }
+                }
+            }
+        }
         if !suggestions.isEmpty {
             HStack(spacing: 8) {
                 SectionLabel("From yesterday")
                 ForEach(suggestions) { task in
-                    Button {
+                    suggestionChip(task.title) {
                         let minutes = Int(task.end.timeIntervalSince(task.start) / 60)
-                        withAnimation(.snappy(duration: 0.25)) {
-                            items.append(DayPlanner.Item(title: task.title, minutes: min(max(minutes, 30), 180), lane: task.lane))
-                        }
-                    } label: {
-                        Label {
-                            Text(verbatim: task.title).lineLimit(1)
-                        } icon: {
-                            Image(systemName: "plus")
-                        }
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(OdakPalette.ink.opacity(0.75))
-                        .padding(.horizontal, 10)
-                        .frame(height: 26)
-                        .background(OdakPalette.bands[0], in: Capsule())
-                        .contentShape(Capsule())
+                        items.append(DayPlanner.Item(title: task.title, minutes: min(max(minutes, 30), 180), lane: task.lane))
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
+    }
+
+    private func suggestionChip(_ title: String, add: @escaping () -> Void) -> some View {
+        Button {
+            withAnimation(.snappy(duration: 0.25), add)
+        } label: {
+            Label {
+                Text(verbatim: title).lineLimit(1)
+            } icon: {
+                Image(systemName: "plus")
+            }
+            .font(.system(size: 12, weight: .medium))
+            .foregroundStyle(OdakPalette.ink.opacity(0.75))
+            .padding(.horizontal, 10)
+            .frame(height: 26)
+            .background(OdakPalette.bands[0], in: Capsule())
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Open goals of the week that are not in today yet.
+    private func weekGoalSuggestions(existing: [PlannedTask]) -> [WeekGoal] {
+        let taken = Set(existing.map(\.title)).union(items.map(\.title))
+        return model.goals.visible()
+            .filter { !$0.isDone && !taken.contains($0.title) }
+            .prefix(3)
+            .map { $0 }
     }
 
     private func carryOverSuggestions(today: Date, existing: [PlannedTask]) -> [PlannedTask] {

@@ -44,6 +44,7 @@ struct DialView: View {
                     .onTapGesture { selectedTaskID = arc.id }
                     .contextMenu {
                         Button("Edit…") { onEdit(arc.task) }
+                        Menu("Postpone") { PostponeItems(task: arc.task) }
                         Button("Delete", role: .destructive) { onDelete(arc.task) }
                     }
             }

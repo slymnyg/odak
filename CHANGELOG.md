@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Postpone: a task that did not happen can be pushed back 30 minutes or an hour, taking the focus work after it along, or moved to the next free time today or tomorrow. Meetings and breaks stay where they are, and a line at the foot of the planner says where the task went.
+- This Week: a list in the planner for work that has to happen this week but has no time yet. Hover a goal to focus on it for 30 minutes, or pick another length or a free slot later today; goals show how long you have focused on them, are offered when you plan the day, and stay until they are ticked off.
+- When the time to plan the day arrives, the planner comes forward above every other window instead of waiting behind them.
 - Plan the Day: a morning sheet (⌘D) where you type what matters, most important first, and each task lands in the first free time around your breaks; long tasks continue after a break and anything that will not fit is flagged. Working hours and standing breaks such as lunch are asked once and reused every day, and yesterday's tasks are one click away.
 - Reminders: an invitation to plan the day at a time you choose, and a notification before each planned task.
 - Data folder: plans, focus history and project time can live in iCloud Drive or any synced folder, so every Mac that points at the same folder shows them. Plans are stored one file per day and history one file per Mac, so two Macs do not overwrite each other, and changes made elsewhere appear while the app is open. Odak itself still makes no network requests. Existing data is copied into the new layout on first launch; the old files are left in place.

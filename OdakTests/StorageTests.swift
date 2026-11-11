@@ -176,3 +176,71 @@ final class StorageTests: XCTestCase {
         XCTAssertEqual(Storage.fileSafe("Süleyman’ın MacBook Pro"), "Suleyman-in-MacBook-Pro")
     }
 }
+
+@MainActor
+final class GoalStoreTests: XCTestCase {
+    private var root: URL!
+    private let calendar = Calendar.current
+
+    override func setUp() async throws {
+        root = FileManager.default.temporaryDirectory.appending(path: "odak-goals-\(UUID().uuidString)", directoryHint: .isDirectory)
+    }
+
+    override func tearDown() async throws {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    func testGoalsAreOneFileEachAndSurviveAReload() {
+        let store = GoalStore(folder: root)
+        XCTAssertNil(store.add("   "))
+        store.add("Ship the update feature")
+        store.add(" Write release notes ")
+        XCTAssertEqual(Storage.jsonFiles(in: root).count, 2)
+        XCTAssertEqual(GoalStore(folder: root).goals.map(\.title), ["Ship the update feature", "Write release notes"])
+    }
+
+    func testDoneGoalsStayForTheWeekThenLeave() throws {
+        let store = GoalStore(folder: root)
+        let a = try XCTUnwrap(store.add("a"))
+        let b = try XCTUnwrap(store.add("b"))
+        let now = Date.now
+        store.setDone(true, for: a.id, at: now)
+        XCTAssertEqual(store.visible(inWeekOf: now).map(\.title), ["b", "a"])
+
+        let nextWeek = try XCTUnwrap(calendar.date(byAdding: .day, value: 8, to: now))
+        XCTAssertEqual(store.visible(inWeekOf: nextWeek).map(\.title), ["b"])
+
+        store.setDone(false, for: a.id)
+        XCTAssertEqual(GoalStore(folder: root).visible(inWeekOf: nextWeek).map(\.title), ["a", "b"])
+        XCTAssertEqual(b.isDone, false)
+    }
+
+    func testRemovingAGoalRemovesItsFile() throws {
+        let store = GoalStore(folder: root)
+        let a = try XCTUnwrap(store.add("a"))
+        store.add("b")
+        store.remove(a.id)
+        XCTAssertEqual(GoalStore(folder: root).goals.map(\.title), ["b"])
+    }
+
+    func testAnotherMacsGoalsAppearOnReload() {
+        let here = GoalStore(folder: root)
+        GoalStore(folder: root).add("theirs")
+        here.add("mine")
+        here.reload()
+        XCTAssertEqual(Set(here.goals.map(\.title)), ["mine", "theirs"])
+    }
+
+    func testFittingIntoTodayUsesFreeTimeOrRefuses() throws {
+        let planned = Preferences.lastPlannedDay
+        defer { Preferences.lastPlannedDay = planned }
+        let model = AppModel(storage: Storage(root: root, device: "t"))
+        let now = try XCTUnwrap(calendar.date(bySettingHour: 16, minute: 0, second: 0, of: .now))
+        model.routine.routine.blocks = []
+        XCTAssertTrue(model.fitIntoToday(title: "a", minutes: 60, now: now))
+        XCTAssertFalse(model.fitIntoToday(title: "b", minutes: 120, now: now))
+        let tasks = model.plans.tasks(on: now)
+        XCTAssertEqual(tasks.map(\.title), ["a"])
+        XCTAssertEqual(calendar.component(.hour, from: tasks[0].start), 16)
+    }
+}

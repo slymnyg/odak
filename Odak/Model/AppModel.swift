@@ -9,6 +9,7 @@ final class AppModel {
     let plans: PlanStore
     let activity: ActivityStore
     let routine: RoutineStore
+    let goals: GoalStore
     let notifier: Notifier
     let blocking: BlockingController
     let focusScreen = FocusScreenController()
@@ -18,6 +19,8 @@ final class AppModel {
     private(set) var isFocusScreenVisible = false
     /// True while the planner should be showing the "plan the day" sheet.
     var isPlanningDay = false
+    /// A short confirmation shown at the foot of the planner, such as where a task was moved to.
+    private(set) var planNotice: PlanNotice? = nil
 
     @ObservationIgnored private var ticker: Task<Void, Never>? = nil
     @ObservationIgnored private var activityWatcher: ActivityWatcher?
@@ -35,6 +38,7 @@ final class AppModel {
         self.activity = activity ?? ActivityStore(folder: storage.activity, device: storage.device)
         history = SessionStore(folder: storage.sessions, device: storage.device)
         routine = RoutineStore(folder: storage.root)
+        goals = GoalStore(folder: storage.goals)
         let notifier = Notifier()
         self.notifier = notifier
         blocking = BlockingController(notifier: notifier)
@@ -55,6 +59,7 @@ final class AppModel {
             self?.history.reload()
             self?.activity.reload()
             self?.routine.reload()
+            self?.goals.reload()
         }
         watcher.start()
         storageWatcher = watcher
@@ -75,6 +80,7 @@ final class AppModel {
         history.relocate(to: storage.sessions)
         activity.relocate(to: storage.activity)
         routine.relocate(to: storage.root)
+        goals.relocate(to: storage.goals)
         if wasWatching {
             startWatchingStorage()
         }
@@ -206,8 +212,8 @@ final class AppModel {
         }
     }
 
-    /// Once a day, from the chosen time on, the sheet is put up. At launch the window comes
-    /// forward with it; later it waits in the planner and a notification does the asking.
+    /// Once a day, from the chosen time on, the sheet is put up and the planner comes forward
+    /// above everything else. A running focus session is not interrupted; the sheet follows it.
     func offerDayPlanIfDue(bringForward: Bool, now: Date = .now) {
         guard Preferences.planDay, !isPlanningDay, !timer.isActive,
               Preferences.lastPlannedDay != PlanFiles.key(for: now),
@@ -217,12 +223,14 @@ final class AppModel {
             planDay()
         } else {
             isPlanningDay = true
+            planner.showOnTop(model: self)
         }
     }
 
     /// Today has been planned or waved off; the invitation moves to tomorrow.
     func closeDayPlan() {
         isPlanningDay = false
+        planner.settle()
         Preferences.lastPlannedDay = PlanFiles.key(for: .now)
         refreshReminders()
     }
@@ -250,6 +258,147 @@ final class AppModel {
             ))
         }
         closeDayPlan()
+    }
+
+    /// Places one piece of work in the first free time left today. Returns `false` when the
+    /// working day has no room for all of it.
+    @discardableResult
+    func fitIntoToday(title: String, minutes: Int, now: Date = .now) -> Bool {
+        let today = Calendar.current.startOfDay(for: now)
+        let item = DayPlanner.Item(title: title, minutes: minutes)
+        let outline = DayOutline(routine: routine.routine, existing: plans.tasks(on: today), items: [item], day: today, now: now)
+        guard outline.result.leftOver.isEmpty, !outline.result.placements.isEmpty else { return false }
+        for placement in outline.result.placements {
+            plans.save(PlannedTask(
+                title: title,
+                note: "",
+                start: DialGeometry.date(forDayMinutes: placement.range.lowerBound, on: today),
+                end: DialGeometry.date(forDayMinutes: placement.range.upperBound, on: today),
+                lane: .focus
+            ))
+        }
+        return true
+    }
+
+    // MARK: Postponing
+
+    enum Postponement {
+        /// Push the task back, and the focus work after it that it would run into.
+        case later(minutes: Int)
+        /// The first free time left today.
+        case nextFree
+        /// The first free time of the next day.
+        case tomorrow
+    }
+
+    struct PlanNotice: Equatable, Identifiable {
+        let id = UUID()
+        let text: String
+        var isWarning = false
+    }
+
+    /// Moves a task that did not happen when planned. Meetings and breaks are treated as fixed:
+    /// nothing is moved onto them and they are never moved to make room. Returns `false`, changing
+    /// nothing, when there is no room.
+    @discardableResult
+    func postpone(_ task: PlannedTask, _ how: Postponement, now: Date = .now) -> Bool {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: now)
+        let taskDay = calendar.startOfDay(for: task.start)
+        let length = max(Int(task.end.timeIntervalSince(task.start) / 60), DayPlanner.step)
+        var day = max(taskDay, today)
+        var moving = [task]
+        var placements: [DayPlanner.Placement] = []
+        var items: [DayPlanner.Item] = []
+
+        switch how {
+        case .later(let minutes):
+            day = taskDay
+            func dayMinutes(_ date: Date) -> Int { DialGeometry.dayMinutes(for: date, on: day) }
+            let onDay = plans.tasks(on: day)
+            // The task, and the focus work planned after it, keep their order and slide together.
+            moving = onDay.filter { $0.id == task.id || ($0.lane == .focus && $0.start >= task.start) }
+            let fixed = onDay.filter { other in !moving.contains { $0.id == other.id } }
+            var start = dayMinutes(task.start) + minutes
+            if day == today {
+                start = max(start, dayMinutes(now))
+            }
+            start = DayPlanner.roundedUp(start)
+            guard DialGeometry.minutesPerDay - start >= DayPlanner.step else { return fail() }
+            // Each one goes no earlier than it was, and no earlier than the one before it ends:
+            // work is only ever pushed back, never pulled forward into a gap.
+            var busy = fixed.map { dayMinutes($0.start)...dayMinutes($0.end) }
+            var cursor = start
+            for moved in moving {
+                let item = DayPlanner.Item(
+                    id: moved.id,
+                    title: moved.title,
+                    minutes: max(Int(moved.end.timeIntervalSince(moved.start) / 60), DayPlanner.step),
+                    lane: moved.lane
+                )
+                let earliest = moved.id == task.id ? cursor : max(cursor, DayPlanner.roundedUp(dayMinutes(moved.start)))
+                guard DialGeometry.minutesPerDay - earliest >= DayPlanner.step else { return fail() }
+                let result = DayPlanner.schedule([item], window: earliest...DialGeometry.minutesPerDay, busy: busy)
+                guard result.leftOver.isEmpty, let last = result.placements.last else { return fail() }
+                items.append(item)
+                placements += result.placements
+                busy += result.placements.map(\.range)
+                cursor = last.range.upperBound
+            }
+
+        case .nextFree, .tomorrow:
+            if case .tomorrow = how {
+                day = calendar.date(byAdding: .day, value: 1, to: day) ?? day
+            }
+            let item = DayPlanner.Item(id: task.id, title: task.title, minutes: length, lane: task.lane)
+            let others = plans.tasks(on: day).filter { $0.id != task.id }
+            let outline = DayOutline(routine: routine.routine, existing: others, items: [item], day: day, now: max(now, day))
+            guard outline.result.leftOver.isEmpty, !outline.result.placements.isEmpty else { return fail() }
+            items = [item]
+            placements = outline.result.placements
+        }
+
+        // The first stretch an item gets is the task itself, moved; a task split by something
+        // fixed continues as a new task after it.
+        var seen = Set<PlannedTask.ID>()
+        for placement in placements {
+            guard var moved = moving.first(where: { $0.id == placement.item }) else { continue }
+            if !seen.insert(moved.id).inserted {
+                moved.id = UUID()
+            }
+            moved.start = DialGeometry.date(forDayMinutes: placement.range.lowerBound, on: day)
+            moved.end = DialGeometry.date(forDayMinutes: placement.range.upperBound, on: day)
+            plans.save(moved)
+        }
+
+        if let first = placements.first(where: { $0.item == task.id }) {
+            let time = DialGeometry.date(forDayMinutes: first.range.lowerBound, on: day).formatted(date: .omitted, time: .shortened)
+            let text: String
+            if calendar.isDate(day, inSameDayAs: today) {
+                text = String(localized: "Moved to \(time)")
+            } else if calendar.isDate(day, inSameDayAs: calendar.date(byAdding: .day, value: 1, to: today) ?? today) {
+                text = String(localized: "Moved to tomorrow, \(time)")
+            } else {
+                text = String(localized: "Moved to \(day.formatted(.dateTime.weekday(.wide))), \(time)")
+            }
+            show(PlanNotice(text: text))
+        }
+        return true
+
+        func fail() -> Bool {
+            show(PlanNotice(text: String(localized: "No free time for it there"), isWarning: true))
+            return false
+        }
+    }
+
+    private func show(_ notice: PlanNotice) {
+        planNotice = notice
+        Task {
+            try? await Task.sleep(for: .seconds(2.6))
+            if planNotice?.id == notice.id {
+                planNotice = nil
+            }
+        }
     }
 
     /// Reschedules the invitation and the task reminders from the current plan and settings.

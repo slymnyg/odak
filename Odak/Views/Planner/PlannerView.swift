@@ -49,6 +49,15 @@ struct PlannerView: View {
             .animation(.spring(duration: 0.75, bounce: 0.24), value: segment)
             .animation(.snappy(duration: 0.3), value: day)
         }
+        .overlay(alignment: .bottom) {
+            if let notice = model.planNotice {
+                PlanNoticeView(notice: notice)
+                    .padding(.bottom, 96)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .id(notice.id)
+            }
+        }
+        .animation(.snappy(duration: 0.3), value: model.planNotice)
         .background(OdakPalette.paper)
         .ignoresSafeArea()
         .frame(minWidth: 940, minHeight: 600)

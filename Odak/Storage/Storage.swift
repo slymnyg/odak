@@ -13,6 +13,7 @@ struct Storage: Equatable {
     var plans: URL { root.appending(path: "plans", directoryHint: .isDirectory) }
     var sessions: URL { root.appending(path: "sessions", directoryHint: .isDirectory) }
     var activity: URL { root.appending(path: "activity", directoryHint: .isDirectory) }
+    var goals: URL { root.appending(path: "goals", directoryHint: .isDirectory) }
 
     static var localRoot: URL {
         URL.applicationSupportDirectory.appending(path: "Odak", directoryHint: .isDirectory)
